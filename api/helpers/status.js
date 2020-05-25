@@ -10,14 +10,8 @@ const status = {
     bad: 400,
     nocontent: 204
 };
-const trip_statuses = {
-    active: 1.00,
-    cancelled: 2.00
-};
-
 export {
     successMsg,
     errorMsg,
     status,
-    trip_statuses
 };
