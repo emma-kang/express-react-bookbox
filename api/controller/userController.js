@@ -56,3 +56,44 @@ const createNewUser = async (req, res) => {
         return res.status(status.error).send(errorMsg);
     }
 };
+
+const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (isEmpty(email) || isEmpty(password)) {
+        errorMsg.error = 'Email or Password is missing';
+        return res.status(status.bad).send(errorMsg);
+    }
+    if (!isValidEmail(email) || !validatePassword(password)) {
+        errorMsg.error = 'Please enter a valid email or password';
+        return res.status(status.bad).send(errorMsg);
+    }
+
+    const sql = `SELECT * FROM users WHERE useremail = $1`;
+    try {
+        const { rows } = await dbQuery.query(sql, [email]);
+        const dbResponse = rows[0];
+        if (!dbResponse) {
+            errorMsg.error = 'User with the email does not exist';
+            return res.status(status.notfound).send(errorMsg);
+        }
+        if (!comparePassword(dbResponse.password, password)) {
+            errorMsg.error = 'The password you provided is incorrect';
+            return res.status(status.bad).send(errorMsg);
+        }
+
+        const token = generateUserToken(dbResponse.useremail, dbResponse.id, dbResponse.firstname, dbResponse.lastname);
+        delete dbResponse.password;
+        successMsg.data = dbResponse;
+        successMsg.data.token = token;
+        return res.status(status.success).send(successMsg);
+    } catch (error) {
+        errorMsg.error = 'Operation was not successful';
+        return res.status(status.error).send(errorMsg);
+    }
+};
+
+export {
+    createNewUser,
+    loginUser
+}
