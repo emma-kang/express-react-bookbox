@@ -27,3 +27,7 @@ const getAllBooks = async (req, res) => {
         return res.status(status.error).send(errorMsg);
     }
 }
+
+export {
+    getAllBooks
+}
