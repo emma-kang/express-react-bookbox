@@ -1,9 +1,9 @@
-var express = require('express');
-var router = express.Router();
+const userController = require('../controller/userController');
+const express = require('express');
+const router = express.Router();
+const verifyAuth = require('../middleware/verifyAuth');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+router.get('/login', verifyAuth, userController.loginUser);
+router.post('/signup', verifyAuth, userController.createNewUser);
 
 module.exports = router;
