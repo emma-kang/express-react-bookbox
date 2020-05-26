@@ -14,6 +14,13 @@ import {
     errorMsg, successMsg, status
 } from "../helpers/status";
 
+/**
+ * Create New User Method
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
+
 const createNewUser = async (req, res) => {
     const {
         email, firstname, lastname, password
@@ -43,7 +50,8 @@ const createNewUser = async (req, res) => {
         const { rows } = await dbQuery.query(sql, values);
         const dbResponse = rows[0];
         delete dbResponse.password;
-        const token = generateUserToken(dbResponse.email, dbResponse.id, dbResponse.firstname, dbResponse.lastname);
+        const token = generateUserToken(dbResponse.email, dbResponse.id, 
+            dbResponse.firstname, dbResponse.lastname, dbResponse.isadmin);
         successMsg.data = dbResponse;
         successMsg.data.token = token;
         return res.status(status.created).send(successMsg);
@@ -57,6 +65,12 @@ const createNewUser = async (req, res) => {
     }
 };
 
+/**
+ * loginUser Method
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
@@ -82,7 +96,8 @@ const loginUser = async (req, res) => {
             return res.status(status.bad).send(errorMsg);
         }
 
-        const token = generateUserToken(dbResponse.useremail, dbResponse.id, dbResponse.firstname, dbResponse.lastname);
+        const token = generateUserToken(dbResponse.useremail, dbResponse.id, 
+            dbResponse.firstname, dbResponse.lastname, dbResponse.isadmin);
         delete dbResponse.password;
         successMsg.data = dbResponse;
         successMsg.data.token = token;

@@ -25,7 +25,8 @@ const verifyToken = async (req, res, next) => {
             email: decoded.email,
             user_id: decoded.user_id,
             first_name: decoded.first_name,
-            last_name: decoded.last_name
+            last_name: decoded.last_name,
+            isAdmin: decoded.isAdmin
         };
         next();
     } catch (error) {

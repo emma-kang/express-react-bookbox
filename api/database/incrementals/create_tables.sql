@@ -23,14 +23,15 @@ create table Users (
     password varchar(255) not null,
     firstname varchar(50) not null,
     lastname varchar(50) not null,
-    createdDate date not null
+    createdDate date not null,
+    isadmin int default 0
 );
 
 create table Comments (
     id serial primary key,
     bookid Integer references Books(id) not null,
     postingDate date not null,
-    userid Integer references Users(id) not null
+    userid Integer references Users(id) not null,
     body varchar(1024) not null
 );
 
