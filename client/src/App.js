@@ -1,29 +1,26 @@
-import React, {Component} from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { apiResponse: "" };
-    }
+import Header from './component/scenes/header/Header';
+import Footer from './component/scenes/footer/Footer';
+import HomeEntry from './component/scenes/home';
+import BookEntry from './component/scenes/books';
 
-    callAPI() {
-        fetch("http://localhost:8080/testAPI")
-            .then(res => res.text())
-            .then(res => this.setState({ apiResponse: res}))
-            .catch(err => err);
-    }
-
-    componentDidMount() {
-        this.callAPI();
-    }
-
-    render() {
-        return (
-            <div className="App">
-                <p className="App-intro">{this.state.apiResponse}</p>
+const App = (props) => {
+  return(
+    <div style={{display: 'flex', flexDirection: 'column'}}>
+        <Header />
+        <Router>
+            <div style={{marginTop: '60px', height: 'calc(100vh - 120px)'}}>
+                <Switch>
+                    <Route exact path='/' component={() => { return(<HomeEntry />); }} />
+                    <Route path='/books' component={() => { return(<BookEntry />); }} />
+                </Switch>
             </div>
-        )
-    }
-}
+        </Router>
+        <Footer />
+    </div>
+  )
+};
 
 export default App;
