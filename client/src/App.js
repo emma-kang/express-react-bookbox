@@ -9,16 +9,16 @@ import BookEntry from './component/scenes/books';
 const App = (props) => {
   return(
     <div style={{display: 'flex', flexDirection: 'column'}}>
-        <Header />
         <Router>
-            <div style={{marginTop: '60px', height: 'calc(100vh - 120px)'}}>
+            <Header />
+            <div style={{marginTop: '100px', height: 'calc(100vh - 160px)'}}>
                 <Switch>
                     <Route exact path='/' component={() => { return(<HomeEntry />); }} />
                     <Route path='/books' component={() => { return(<BookEntry />); }} />
                 </Switch>
             </div>
+            <Footer />
         </Router>
-        <Footer />
     </div>
   )
 };
