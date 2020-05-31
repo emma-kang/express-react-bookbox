@@ -75,7 +75,7 @@ var createNewUser = /*#__PURE__*/function () {
             rows = _yield$dbQuery$query.rows;
             dbResponse = rows[0];
             delete dbResponse.password;
-            token = (0, _validation.generateUserToken)(dbResponse.email, dbResponse.id, dbResponse.firstname, dbResponse.lastname, dbResponse.isadmin);
+            token = (0, _validation.generateUserToken)(dbResponse.email, dbResponse.id, dbResponse.firstname, dbResponse.lastname);
             _status.successMsg.data = dbResponse;
             _status.successMsg.data.token = token;
             return _context.abrupt("return", res.status(_status.status.created).send(_status.successMsg));

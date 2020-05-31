@@ -67,7 +67,7 @@ var isEmpty = function isEmpty(input) {
 
 exports.isEmpty = isEmpty;
 
-var generateUserToken = function generateUserToken(email, id, firstname, lastname, isAdmin) {
+var generateUserToken = function generateUserToken(email, id, firstname, lastname) {
   var token = _jsonwebtoken["default"].sign({
     email: email,
     user_id: id,

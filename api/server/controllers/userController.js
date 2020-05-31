@@ -51,7 +51,7 @@ const createNewUser = async (req, res) => {
         const dbResponse = rows[0];
         delete dbResponse.password;
         const token = generateUserToken(dbResponse.email, dbResponse.id, 
-            dbResponse.firstname, dbResponse.lastname, dbResponse.isadmin);
+            dbResponse.firstname, dbResponse.lastname);
         successMsg.data = dbResponse;
         successMsg.data.token = token;
         return res.status(status.created).send(successMsg);

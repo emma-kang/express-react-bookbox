@@ -43,7 +43,7 @@ const isEmpty = (input) => {
  * @param {string} id
  * @returns {string} token
  */
-const generateUserToken = (email, id, firstname, lastname, isAdmin) => {
+const generateUserToken = (email, id, firstname, lastname) => {
     const token = jwt.sign({
         email,
         user_id: id,
