@@ -1,4 +1,4 @@
-const successMsg = { status: 'success' };
+const successMsg = { status: 'success '};
 const errorMsg = { status: 'error' };
 const status = {
     success: 200,
@@ -10,8 +10,9 @@ const status = {
     bad: 400,
     nocontent: 204
 };
+
 export {
     successMsg,
     errorMsg,
-    status,
-};
+    status
+}

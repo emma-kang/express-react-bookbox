@@ -1,8 +1,7 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import {
-    errorMsg, status
-} from "../helpers/status";
+
+import { errorMsg, status } from '../helpers/status';
 
 dotenv.config();
 

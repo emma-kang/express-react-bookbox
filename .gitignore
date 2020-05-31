@@ -263,3 +263,4 @@ fabric.properties
 # End of https://www.gitignore.io/api/node,react,macos,webstorm
 api/env.js
 .idea/dataSources.xml
+/api/server/env.js
