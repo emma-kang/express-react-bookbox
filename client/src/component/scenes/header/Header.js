@@ -9,29 +9,40 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
+        position: 'fixed',
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
-    logo: {
-        width: '80px',
-        height: '80px'
+    bgColor: {
+        backgroundColor: '#3F4938',
+    },
+    navItem: {
+        color: 'white',
+        backgroundColor: '#3F4938'
+    },
+    navSubItem: {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'flex-end'
     }
 }))
 
 const Header = (props) => {
     let history = useHistory();
+    const classes = useStyles();
     return(
-        <div style={{position: 'fixed', width: '100%', display: 'flex', padding: '0 50px', alignItems: 'center', justifyContent: 'space-between', height: '100px'}}>
-            {/* LOGO */}
-            <div>
-                <img src={LogoImg} alt="Logo" style={{width: '80px', height:'80px'}}/>
-            </div>
-
+        <div>
             {/* Navigation */}
-            <div>
+            <div className={classes.root}>
                 <AppBar position="static">
-                    <Toolbar>
-                        <Button variant="contained" color="inherit" onClick={() => history.push('/')}>Home</Button>
-                        <Button variant="contained" color="inherit" onClick={() => history.push('/books')}>Books</Button>
-                        <Button variant="contained" color="inherit" onClick={() => history.push('/login')}>Login</Button>
+                    <Toolbar className={classes.bgColor}>
+                        <img src={LogoImg} alt="Logo" style={{width: 'auto', height: '80px'}}/>
+                        <div className={classes.navSubItem}>
+                            <Button className={classes.navItem} onClick={() => history.push('/')}>Home</Button>
+                            <Button className={classes.navItem} onClick={() => history.push('/books')}>Books</Button>
+                            <Button className={classes.navItem} onClick={() => history.push('/login')}>Login</Button>
+                        </div>
                     </Toolbar>
                 </AppBar>
                 {/*<Button variant="contained" color="secondary" onClick={() => history.push('/books')}>Let's go Books</Button>*/}
