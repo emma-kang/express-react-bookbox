@@ -11,7 +11,7 @@ const App = (props) => {
     <div style={{display: 'flex', flexDirection: 'column'}}>
         <Router>
             <Header />
-            <div style={{marginTop: '100px', height: 'calc(100vh - 160px)'}}>
+            <div style={{marginTop: '100px'}}>
                 <Switch>
                     <Route exact path='/' component={() => { return(<HomeEntry />); }} />
                     <Route path='/books' component={() => { return(<BookEntry />); }} />
