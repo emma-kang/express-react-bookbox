@@ -29,7 +29,7 @@ const HomeContainer = (props) => {
             <Grid container spacing={2}>
                 <Grid item sm={12} md={6}>
                     <Paper className={classes.paper}>
-                        <img src={bookImg} alt="book-image" style={{width: '100%'}}/>
+                        <img src={bookImg} alt="book" style={{width: '100%'}}/>
                     </Paper>
                 </Grid>
                 <Grid item sm={12} md={6}>
