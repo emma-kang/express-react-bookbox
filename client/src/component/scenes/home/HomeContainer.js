@@ -40,7 +40,8 @@ const HomeContainer = (props) => {
                             You can leave comment on the book detail pages! <br/>
                             Even there's only few books, it could be your favorite. <br/>
                         </div>
-                        <Button variant="contained" style={{backgroundColor: '#F1DEB4'}} onClick={() => history.push('/books')}>Let's go Books</Button>
+                        <Button variant="contained" style={{backgroundColor: '#F1DEB4'}}
+                                onClick={() => history.push('/books')}>Let's go Books</Button>
                     </Paper>
                 </Grid>
             </Grid>
