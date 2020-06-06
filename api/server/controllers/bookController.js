@@ -3,7 +3,8 @@ import dbQuery from '../database/dbQuery';
 import { errorMsg, successMsg, status } from '../helpers/status';
 
 const getAllBooks = async (req, res) => {
-    const sql = `SELECT * FROM books ORDER BY 1`;
+    const sql = `SELECT b.*, CONCAT(a.firstname, ' ', a.lastname) author
+                 FROM books b JOIN authors a on b.authorid = a.id ORDER BY b.id ASC`;
     try {
         const { rows } = await dbQuery.query(sql);
         const dbResponse = rows;
