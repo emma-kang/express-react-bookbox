@@ -23,7 +23,7 @@ var getAllBooks = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            sql = "SELECT * FROM books ORDER BY 1";
+            sql = "SELECT b.*, CONCAT(a.firstname, ' ', a.lastname) author\n                 FROM books b JOIN authors a on b.authorid = a.id ORDER BY b.id ASC";
             _context.prev = 1;
             _context.next = 4;
             return _dbQuery["default"].query(sql);

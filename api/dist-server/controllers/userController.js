@@ -64,7 +64,7 @@ var createNewUser = /*#__PURE__*/function () {
 
           case 11:
             hashedPassword = (0, _validation.hashPassword)(password);
-            sql = "INSERT INTO users \n    (useremail, password, firstname, lastname, createddate) values($1, $2, $3, $4, $5)\n    returning *";
+            sql = "INSERT INTO users\n                   (useremail, password, firstname, lastname, createddate)\n               values ($1, $2, $3, $4, $5)\n               returning *";
             values = [email, hashedPassword, firstname, lastname, createddate];
             _context.prev = 14;
             _context.next = 17;
@@ -146,7 +146,7 @@ var loginUser = /*#__PURE__*/function () {
             return _context2.abrupt("return", res.status(_status.status.bad).send(_status.errorMsg));
 
           case 7:
-            sql = "SELECT * FROM users WHERE useremail = $1";
+            sql = "SELECT *\n               FROM users\n               WHERE useremail = $1";
             _context2.prev = 8;
             _context2.next = 11;
             return _dbQuery["default"].query(sql, [email]);
