@@ -5,6 +5,7 @@ import bookImg from '../../../image/main-book.jpg';
 import {makeStyles} from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import ButtonComp from '../reusuable/buttonComp';
+import {connect} from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,6 +21,12 @@ const HomeContainer = (props) => {
   const onClickBtn = () => {
     history.push('/books');
   }
+
+  // if(sessionStorage.getItem('token')){
+  //   console.log(sessionStorage.getItem('token'));
+  // } else {
+  //   console.log('no token');
+  // }
 
   return (
     <div className={classes.root}>
@@ -45,4 +52,15 @@ const HomeContainer = (props) => {
   )
 }
 
-export default HomeContainer;
+const mapStateToProps = state => ({
+  redux_loginData: state.ducksReducer.loginAPI.status
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {};
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomeContainer);
