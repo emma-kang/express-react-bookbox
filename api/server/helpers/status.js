@@ -1,4 +1,4 @@
-const successMsg = { status: 'success '};
+const successMsg = { status: 'success'};
 const errorMsg = { status: 'error' };
 const status = {
     success: 200,
