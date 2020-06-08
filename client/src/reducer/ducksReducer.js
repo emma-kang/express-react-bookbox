@@ -27,8 +27,8 @@ export const redux_set_newuser = (userData) => ({
   type: SET_NEWUSER, payload: userData
 })
 
-export const redux_login_request = () => ({
-  type: LOGIN_REQUEST
+export const redux_login_request = (history) => ({
+  type: LOGIN_REQUEST, payload : history
 });
 
 export const redux_login_success = (dataFromServer) => ({
@@ -39,8 +39,8 @@ export const redux_login_failure = (dataFromServer) => ({
   type: LOGIN_FAILURE, payload: dataFromServer
 });
 
-export const redux_signup_request = () => ({
-  type: SIGNUP_REQUEST
+export const redux_signup_request = (history) => ({
+  type: SIGNUP_REQUEST, payload: history
 });
 
 export const redux_signup_success = (dataFromServer) => ({
@@ -139,7 +139,7 @@ export default function ducksReducer(state = initState, action) {
             processing: false,
             processed: true,
             message: action.payload.message,
-            result: action.payload.result
+            result: action.payload.value
           };
           break;
         case SINGUP_FAILURE:

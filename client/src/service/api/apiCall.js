@@ -21,10 +21,10 @@ const callFetch = (address, method, body, headers) => {
 export const loginRequest = async ({userEmail, userPw}) => {
   try {
     const address = '/api/users/login';
-    const body = {
+    const body = JSON.stringify({
       "email": userEmail,
       "password": userPw
-    };
+    });
 
     const headers = {
       'Content-Type': 'application/json',
@@ -42,12 +42,14 @@ export const loginRequest = async ({userEmail, userPw}) => {
 export const signupRequest = async ({firstname, lastname, email, password}) => {
   try {
     const address = '/api/users/signup';
-    const body = {
-      "firstname": firstname,
-      "lastname": lastname,
+    const body = JSON.stringify({
       "email": email,
+      "first_name": firstname,
+      "last_name": lastname,
       "password": password
-    };
+    });
+
+    console.log(body);
 
     const header = {
       'Content-Type' : 'application/json',
