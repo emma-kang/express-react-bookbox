@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {useHistory} from 'react-router-dom';
 import Container from "@material-ui/core/Container";
 import InputComp from '../reusuable/inputComp';
 import ButtonComp from '../reusuable/buttonComp';
@@ -8,7 +9,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {SINGUP_DATA} from "../../../service/types"
 import {connect} from "react-redux";
-import {redux_login_request, redux_set_newuser, redux_signup_request} from "../../../reducer/ducksReducer"
+import {redux_set_newuser, redux_signup_request} from "../../../reducer/ducksReducer"
 import {validation_name, validation_Email, validation_password} from "../../../service/util";
 
 const {FIRST_NAME, LAST_NAME, EMAIL, PASSWORD} = SINGUP_DATA;
@@ -33,6 +34,8 @@ const Signup = (props) => {
   const classes = useStyles();
   const [activeBtn, setActiveBtn] = useState(false);
 
+  let history = useHistory();
+
   useEffect(() => {
     if (validation_Email(props.redux_signupInput[EMAIL])
       && validation_password(props.redux_signupInput[PASSWORD])
@@ -54,7 +57,7 @@ const Signup = (props) => {
 
   const onClickBtn = () => {
     if (activeBtn) {
-      props.redux_signup_request();
+      props.redux_signup_request({history});
     }
   }
 
@@ -115,7 +118,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch) => {
   return {
     redux_set_newuser: (userData) => dispatch(redux_set_newuser(userData)),
-    redux_signup_request: () => dispatch(redux_signup_request())
+    redux_signup_request: (history) => dispatch(redux_signup_request(history))
   };
 };
 
