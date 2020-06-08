@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {useHistory} from 'react-router-dom';
 import {connect} from 'react-redux';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Link from '@material-ui/core/Link';
@@ -8,6 +9,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import InputComp from '../reusuable/inputComp';
 import ButtonComp from '../reusuable/buttonComp';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import {USER_DATA} from '../../../service/types';
 import {redux_set_userinput, redux_login_request} from "../../../reducer/ducksReducer";
@@ -33,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const LoginContainer = (props) => {
+
+  let history = useHistory();
+
   const classes = useStyles();
   const [activeBtn, setActiveBtn] = useState(false);
 
@@ -51,58 +56,71 @@ const LoginContainer = (props) => {
   }
 
   const onClickBtn = () => {
-    if(activeBtn) {
-      props.redux_login_request();
+    if (activeBtn) {
+      props.redux_login_request({history: history});
     }
   }
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline/>
-      <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          BookBox
-        </Typography>
-        <form className={classes.form}>
-          <InputComp
-            name={USER_EMAIL}
-            placeholder={'Email'}
-            value={props.redux_userInput[USER_EMAIL]}
-            onChangeHandler={onChangeHandler}
-          />
-          <InputComp
-            name={USER_PASSWORD}
-            type={'password'}
-            placeholder={'Password'}
-            value={props.redux_userInput[USER_PASSWORD]}
-            onChangeHandler={onChangeHandler}
-          />
-          <ButtonComp
-            activeBtn={activeBtn}
-            onClickBtn={onClickBtn}
-            text="Login"
-          />
-          <Grid container>
-            <Grid item>
-              <Link href="/signup" variant="body2" style={{color: '#627141'}}>
-                {"Don't have an account? Sign up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
+    (props.redux_loginData.processing)
+      ?
+      <div
+        style={{
+          position: 'absolute', display: 'flex', justifyContent: 'center', alignItems: 'center',
+          top: 0, left: 0, width: '100%', height: '100%', zIndex: 5, backgroundColor: 'rgba(50, 50, 50, 0.6)'
+        }}>
+        <CircularProgress size={50}/>
       </div>
-    </Container>
+      :
+      <Container component="main" maxWidth="xs">
+        <CssBaseline/>
+        <div className={classes.paper}>
+          <Typography component="h1" variant="h5">
+            BookBox
+          </Typography>
+          <form className={classes.form}>
+            <InputComp
+              name={USER_EMAIL}
+              placeholder={'Email'}
+              value={props.redux_userInput[USER_EMAIL]}
+              onChangeHandler={onChangeHandler}
+            />
+            <InputComp
+              name={USER_PASSWORD}
+              type={'password'}
+              placeholder={'Password'}
+              value={props.redux_userInput[USER_PASSWORD]}
+              onChangeHandler={onChangeHandler}
+            />
+            <ButtonComp
+              activeBtn={activeBtn}
+              onClickBtn={onClickBtn}
+              text="Login"
+            />
+            <Grid container>
+              <Grid item>
+                <Link href="/signup" variant="body2" style={{color: '#627141'}}>
+                  {"Don't have an account? Sign up"}
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+      </Container>
+
+
   )
 };
 
 const mapStateToProps = state => ({
-  redux_userInput: state.ducksReducer.userInput
+  redux_userInput: state.ducksReducer.userInput,
+  redux_loginData: state.ducksReducer.loginAPI.status
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
     redux_set_userinput: (userData) => dispatch(redux_set_userinput(userData)),
-    redux_login_request: () => dispatch(redux_login_request()),
+    redux_login_request: (history) => dispatch(redux_login_request(history)),
   };
 };
 
