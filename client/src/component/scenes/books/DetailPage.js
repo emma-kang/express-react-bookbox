@@ -52,7 +52,10 @@ const DetailPage = ({ data, closeDetailPage }) => {
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
                 <Typography gutterBottom variant="h4">
-                  {data.title} <Typography variant="h6"> {data.author} </Typography>
+                  {data.title}
+                </Typography>
+                <Typography variant="h6">
+                  {data.author}
                 </Typography>
                 <Typography variant="subtitle2">
                   <span className={"book-list-info-title"}>ISBN:&nbsp;</span>{data.isbn}<br/>
