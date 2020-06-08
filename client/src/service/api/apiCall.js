@@ -1,58 +1,63 @@
-// import { API_ADDRESS } from '../types';
+import {API_ADDRESS} from '../types';
 
-// const callFetch = (address, method, body, headers) => {
-//   return new Promise((resolve, reject) => {
-//     fetch(`${API_ADDRESS}${address}`, {
-//       method: method,
-//       //withCredentials: true,
-//       body: body,
-//       headers: {...headers}
-//     })
-//     .then(res => res.json())
-//     .then(res => {
-//       resolve(res);
-//     })
-//     .catch(e => {
-//       reject(e);
-//     });
-//   });
-// }
+const callFetch = (address, method, body, headers) => {
+  return new Promise((resolve, reject) => {
+    fetch(`${API_ADDRESS}${address}`, {
+      method: method,
+      //withCredentials: true,
+      body: body,
+      headers: {...headers}
+    })
+      .then(res => res.json())
+      .then(res => {
+        resolve(res);
+      })
+      .catch(e => {
+        reject(e);
+      });
+  });
+}
 
-// export const getAccessToken = async ({ userId, userPw }) => {
-//   try{
-//     const address = '/oauth/token';
-//     const body =
-//       'grant_type=password' +
-//       '&username=' + encodeURIComponent(userId) + 
-//       '&password=' + encodeURIComponent(userPw)
-    
-//     const headers = {
-//       'Content-Type': 'application/x-www-form-urlencoded',
-//     }
-  
-//     const res = await callFetch(address, 'POST', body, headers);
-//     return res;
+export const loginRequest = async ({userEmail, userPw}) => {
+  try {
+    const address = '/api/users/login';
+    const body = {
+      "email": userEmail,
+      "password": userPw
+    };
 
-//   } catch(e) {
-//     console.log('Error in getAccessToken: ', e)
-//     return e;
-//   }
-// };
+    const headers = {
+      'Content-Type': 'application/json',
+    }
 
-// export const getData = async ({ accessToken }) => {
-//   try{
-//     const address = '/api/PetLibrary/List';
-//     const headers = {
-//       'Accept': 'application/json',
-//       'Content-Type': 'application/json',
-//       'Authorization': 'bearer ' + accessToken
-//     }
+    const res = await callFetch(address, 'POST', body, headers);
+    return res;
 
-//     const res = await callFetch(address, 'GET', null, headers);
-//     return res;
+  } catch (e) {
+    console.log('Error in getAccessToken: ', e);
+    return e;
+  }
+};
 
-//   } catch(e) {
-//     console.log('Error in getData: ', e)
-//     return e;
-//   }
-// };
+export const signupRequest = async ({firstname, lastname, email, password}) => {
+  try {
+    const address = '/api/users/signup';
+    const body = {
+      "firstname": firstname,
+      "lastname": lastname,
+      "email": email,
+      "password": password
+    };
+
+    const header = {
+      'Content-Type' : 'application/json',
+    }
+
+    const res = await callFetch(address, 'POST', body, header);
+    return res;
+
+  } catch (e) {
+    console.log('Error in requesting signup: ', e);
+    return e;
+  }
+}

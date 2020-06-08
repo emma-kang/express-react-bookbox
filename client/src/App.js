@@ -5,7 +5,8 @@ import Header from './component/scenes/header/Header';
 import Footer from './component/scenes/footer/Footer';
 import HomeEntry from './component/scenes/home';
 import BookEntry from './component/scenes/books';
-import UserEntry from "./component/scenes/users";
+import LoginEntry from "./component/scenes/login";
+import SignupEntry from './component/scenes/singup';
 
 const App = (props) => {
   return(
@@ -16,7 +17,8 @@ const App = (props) => {
                 <Switch>
                     <Route exact path='/' component={() => { return(<HomeEntry />); }} />
                     <Route path='/books' component={() => { return(<BookEntry />); }} />
-                    <Route path='/login' component={() => { return(<UserEntry />); }} />
+                    <Route path='/login' component={() => { return(<LoginEntry />); }} />
+                    <Route path='/signup' component={() => { return(<SignupEntry />); }} />
                 </Switch>
             </div>
             <Footer />

@@ -1,10 +1,10 @@
-// import { takeEvery, put, select } from "redux-saga/effects";
-// import { LOGIN_PROCESS_REQUEST, redux_login_process_success, redux_login_process_failure,
-//   GET_DATA_REQUEST, redux_get_data_success, redux_get_data_failure } from './ducksReducer';
-// import { getAccessToken, getData } from '../service/api/apiCall';
-// import { USER } from '../service/types';
+import {takeEvery, put, select} from "redux-saga/effects";
+import {LOGIN_REQUEST, redux_signup_failure, SIGNUP_REQUEST} from './ducksReducer';
+import {loginRequest, signupRequest} from '../service/api/apiCall';
+import {USER_DATA, SINGUP_DATA} from '../service/types';
 
-// const { USER_ID, USER_PW } = USER;
+const {USER_EMAIL, USER_PASSWORD} = USER_DATA;
+const {FIRST_NAME, LAST_NAME, EMAIL, PASSWORD} = SINGUP_DATA;
 
 // const addDelay = () => {
 //   return new Promise((resolve) => {
@@ -14,50 +14,48 @@
 //   })
 // }
 
-// function* sagaGetAccessToken(action){
+function* sagaLoginFunc(action) {
 
-//   const allReducerVar = yield select();
-//   console.log(allReducerVar.ducksReducer.userData[USER_ID]);
-//   console.log(allReducerVar.ducksReducer.userData[USER_PW]);
+  const allReducerVar = yield select();
+  console.log(allReducerVar.ducksReducer.userInput[USER_EMAIL]);
+  console.log(allReducerVar.ducksReducer.userInput[USER_PASSWORD]);
 
-//   try{
-//     yield addDelay();
+  try {
+    // yield addDelay();
 
-//     const res = yield getAccessToken({ userId : allReducerVar.ducksReducer.userData[USER_ID], userPw : allReducerVar.ducksReducer.userData[USER_PW] });
-//     console.log(res);
-//     if(res.access_token) {
-//       sessionStorage.setItem('accessToken', res.access_token);
-//       yield put(redux_login_process_success({ message : 'Success Get Access Token' }));
-//       action.payload.history.push('/'); // action.payload -> history object
-//     } else {
-//       yield put(redux_login_process_failure({ message: 'Unsuccess Get Access Token' }));
-//     }
-//   }
-//   catch(err){
-//     yield put(redux_login_process_failure({ message : 'GET ACCESSTOKEN API Try-Catch Error' }));
-//   }
-// }
+    const res = yield loginRequest({
+      userEmail: allReducerVar.ducksReducer.userInput[USER_EMAIL]
+      , userPw: allReducerVar.ducksReducer.userInput[USER_PASSWORD]
+    });
+    // if(res.access_token) {
+    //   sessionStorage.setItem('accessToken', res.access_token);
+    //   yield put(redux_login_process_success({ message : 'Success Get Access Token' }));
+    //   action.payload.history.push('/'); // action.payload -> history object
+    // } else {
+    //   yield put(redux_login_process_failure({ message: 'Unsuccess Get Access Token' }));
+    // }
+  } catch (err) {
+    // yield put(redux_login_process_failure({ message : 'GET ACCESSTOKEN API Try-Catch Error' }));
+  }
+}
 
-// function* sagaGetData(action){
+function* sagaSignUpFunc(action) {
 
-//   const accessToken = sessionStorage.getItem('accessToken');
-  
-//   try{
-//     const res = yield getData({ accessToken : accessToken });
-//     console.log(res);
+  const allReducerVar = yield select();
 
-//     if(res.resultStatus === 200){
-//       yield put(redux_get_data_success({ message : 'Success call api', result : res.value }));
-//     } else{
-//       yield put(redux_get_data_failure({ message : 'Unsuccess call api', result : null }));
-//     }
-//   }
-//   catch(err){
-//     yield put(redux_get_data_failure({ message : 'GET DATA Try-Catch Error' }));
-//   }
-// }
+  try {
+    const res = yield signupRequest({
+      firstname: allReducerVar.ducksReducer.signupInput[FIRST_NAME]
+      , lastname: allReducerVar.ducksReducer.signupInput[LAST_NAME]
+      , email: allReducerVar.ducksReducer.signupInput[EMAIL]
+      , password: allReducerVar.ducksReducer.signupInput[PASSWORD]
+    });
+  } catch (err) {
+    yield put(redux_signup_failure({ message: 'SIGNUP API Try-Catch Error'}));
+  }
+}
 
-export function* requestSagaWatcher(){
-  // yield takeEvery(LOGIN_PROCESS_REQUEST, sagaGetAccessToken);
-  // yield takeEvery(GET_DATA_REQUEST, sagaGetData);
+export function* requestSagaWatcher() {
+  yield takeEvery(LOGIN_REQUEST, sagaLoginFunc);
+  yield takeEvery(SIGNUP_REQUEST, sagaSignUpFunc);
 };
