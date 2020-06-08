@@ -12,7 +12,7 @@ const App = (props) => {
   return(
     <div style={{display: 'flex', flexDirection: 'column'}}>
         <Router>
-            <Header />
+          <Header />
             <div style={{marginTop: '100px'}}>
                 <Switch>
                     <Route exact path='/' component={() => { return(<HomeEntry />); }} />
