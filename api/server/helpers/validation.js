@@ -3,42 +3,6 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 /**
- * isValidEmail helper Method
- * @param {string} email
- * @returns {Boolean}
- */
-const isValidEmail = (email) => {
-    const regex = /\S+@\S+\.\S+/;
-    return regex.test(email);
-}
-
-/**
- * validatePassword helper Method
- * @param {string} password
- * @returns {Boolean}
- */
-const validatePassword = (password) => {
-    if (password.length <= 5 || password === '') {
-        return false;
-    } return true;
-}
-
-/**
- * isEmpty helper Method
- * @param {string, string, string} input
- * @returns {Boolean}
- */
-
-const isEmpty = (input) => {
-    if (input === undefined || input === '') {
-        return true;
-    }
-    if (input.replace(/s/g, '').length) {
-        return false;
-    } return true;
-}
-
-/**
  * Generate Token
  * @param {string} id
  * @returns {string} token
@@ -48,8 +12,7 @@ const generateUserToken = (email, id, firstname, lastname) => {
         email,
         user_id: id,
         firstname,
-        lastname,
-        isAdmin
+        lastname
     },
     env.secret, { expiresIn: '1h'});
 
@@ -76,9 +39,6 @@ const comparePassword = (hashedPasswords, password) => {
 }
 
 export {
-    isValidEmail,
-    validatePassword,
-    isEmpty,
     generateUserToken,
     hashPassword,
     comparePassword
