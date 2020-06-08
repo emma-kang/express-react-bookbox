@@ -4,9 +4,6 @@ import dbQuery from "../database/dbQuery";
 import {
   hashPassword,
   comparePassword,
-  isValidEmail,
-  validatePassword,
-  isEmpty,
   generateUserToken
 } from "../helpers/validation";
 
@@ -23,29 +20,16 @@ import {
 
 const createNewUser = async (req, res) => {
   const {
-    email, firstname, lastname, password
+    email, first_name, last_name, password
   } = req.body;
 
-  const createddate = moment(new Date());
-  if (isEmpty(email) || isEmpty(firstname) || isEmpty(lastname) || isEmpty(password)) {
-    errorMsg.error = 'All fields cannot be empty';
-    return res.status(status.bad).send(errorMsg);
-  }
-  if (!isValidEmail(email)) {
-    errorMsg.error = 'Please enter a valid Email';
-    return res.status(status.bad).send(errorMsg);
-  }
-  if (!validatePassword(password)) {
-    errorMsg.error = 'Password must be more than five characters';
-    return res.status(status.bad).send(errorMsg);
-  }
+  const createdDate = moment(new Date());
   const hashedPassword = hashPassword(password);
-  const sql = `INSERT INTO users
-                   (useremail, password, firstname, lastname, createddate)
+  const sql = `INSERT INTO users (useremail, password, firstname, lastname, createddate)
                values ($1, $2, $3, $4, $5)
                returning *`;
 
-  const values = [email, hashedPassword, firstname, lastname, createddate];
+  const values = [email, hashedPassword, first_name, last_name, createdDate];
 
   try {
     const {rows} = await dbQuery.query(sql, values);
@@ -53,9 +37,12 @@ const createNewUser = async (req, res) => {
     delete dbResponse.password;
     const token = generateUserToken(dbResponse.email, dbResponse.id,
       dbResponse.firstname, dbResponse.lastname);
+
     successMsg.data = dbResponse;
     successMsg.data.token = token;
+
     return res.status(status.created).send(successMsg);
+
   } catch (error) {
     if (error.routine === '_bt_check_unique') {
       errorMsg.error = 'User with that Email already exist';
@@ -75,15 +62,6 @@ const createNewUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const {email, password} = req.body;
 
-  if (isEmpty(email) || isEmpty(password)) {
-    errorMsg.error = 'Email or Password is missing';
-    return res.status(status.bad).send(errorMsg);
-  }
-  if (!isValidEmail(email) || !validatePassword(password)) {
-    errorMsg.error = 'Please enter a valid email or password';
-    return res.status(status.bad).send(errorMsg);
-  }
-
   const sql = `SELECT *
                FROM users
                WHERE useremail = $1`;
@@ -100,7 +78,7 @@ const loginUser = async (req, res) => {
     }
 
     const token = generateUserToken(dbResponse.useremail, dbResponse.id,
-      dbResponse.firstname, dbResponse.lastname, dbResponse.isadmin);
+      dbResponse.firstname, dbResponse.lastname);
     delete dbResponse.password;
     successMsg.data = dbResponse;
     successMsg.data.token = token;

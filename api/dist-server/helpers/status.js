@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.status = exports.errorMsg = exports.successMsg = void 0;
 var successMsg = {
-  status: 'success '
+  status: 'success'
 };
 exports.successMsg = successMsg;
 var errorMsg = {

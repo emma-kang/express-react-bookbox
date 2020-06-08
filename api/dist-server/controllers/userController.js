@@ -27,50 +27,22 @@ var _status = require("../helpers/status");
  */
 var createNewUser = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(req, res) {
-    var _req$body, email, firstname, lastname, password, createddate, hashedPassword, sql, values, _yield$dbQuery$query, rows, dbResponse, token;
+    var _req$body, email, first_name, last_name, password, createdDate, hashedPassword, sql, values, _yield$dbQuery$query, rows, dbResponse, token;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _req$body = req.body, email = _req$body.email, firstname = _req$body.firstname, lastname = _req$body.lastname, password = _req$body.password;
-            createddate = (0, _moment["default"])(new Date());
-
-            if (!((0, _validation.isEmpty)(email) || (0, _validation.isEmpty)(firstname) || (0, _validation.isEmpty)(lastname) || (0, _validation.isEmpty)(password))) {
-              _context.next = 5;
-              break;
-            }
-
-            _status.errorMsg.error = 'All fields cannot be empty';
-            return _context.abrupt("return", res.status(_status.status.bad).send(_status.errorMsg));
-
-          case 5:
-            if ((0, _validation.isValidEmail)(email)) {
-              _context.next = 8;
-              break;
-            }
-
-            _status.errorMsg.error = 'Please enter a valid Email';
-            return _context.abrupt("return", res.status(_status.status.bad).send(_status.errorMsg));
-
-          case 8:
-            if ((0, _validation.validatePassword)(password)) {
-              _context.next = 11;
-              break;
-            }
-
-            _status.errorMsg.error = 'Password must be more than five characters';
-            return _context.abrupt("return", res.status(_status.status.bad).send(_status.errorMsg));
-
-          case 11:
+            _req$body = req.body, email = _req$body.email, first_name = _req$body.first_name, last_name = _req$body.last_name, password = _req$body.password;
+            createdDate = (0, _moment["default"])(new Date());
             hashedPassword = (0, _validation.hashPassword)(password);
-            sql = "INSERT INTO users\n                   (useremail, password, firstname, lastname, createddate)\n               values ($1, $2, $3, $4, $5)\n               returning *";
-            values = [email, hashedPassword, firstname, lastname, createddate];
-            _context.prev = 14;
-            _context.next = 17;
+            sql = "INSERT INTO users (useremail, password, firstname, lastname, createddate)\n               values ($1, $2, $3, $4, $5)\n               returning *";
+            values = [email, hashedPassword, first_name, last_name, createdDate];
+            _context.prev = 5;
+            _context.next = 8;
             return _dbQuery["default"].query(sql, values);
 
-          case 17:
+          case 8:
             _yield$dbQuery$query = _context.sent;
             rows = _yield$dbQuery$query.rows;
             dbResponse = rows[0];
@@ -80,28 +52,28 @@ var createNewUser = /*#__PURE__*/function () {
             _status.successMsg.data.token = token;
             return _context.abrupt("return", res.status(_status.status.created).send(_status.successMsg));
 
-          case 27:
-            _context.prev = 27;
-            _context.t0 = _context["catch"](14);
+          case 18:
+            _context.prev = 18;
+            _context.t0 = _context["catch"](5);
 
             if (!(_context.t0.routine === '_bt_check_unique')) {
-              _context.next = 32;
+              _context.next = 23;
               break;
             }
 
             _status.errorMsg.error = 'User with that Email already exist';
             return _context.abrupt("return", res.status(_status.status.conflict).send(_status.errorMsg));
 
-          case 32:
+          case 23:
             _status.errorMsg.error = 'Operation was not successful';
             return _context.abrupt("return", res.status(_status.status.error).send(_status.errorMsg));
 
-          case 34:
+          case 25:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[14, 27]]);
+    }, _callee, null, [[5, 18]]);
   }));
 
   return function createNewUser(_x, _x2) {
@@ -127,71 +99,52 @@ var loginUser = /*#__PURE__*/function () {
         switch (_context2.prev = _context2.next) {
           case 0:
             _req$body2 = req.body, email = _req$body2.email, password = _req$body2.password;
-
-            if (!((0, _validation.isEmpty)(email) || (0, _validation.isEmpty)(password))) {
-              _context2.next = 4;
-              break;
-            }
-
-            _status.errorMsg.error = 'Email or Password is missing';
-            return _context2.abrupt("return", res.status(_status.status.bad).send(_status.errorMsg));
-
-          case 4:
-            if (!(!(0, _validation.isValidEmail)(email) || !(0, _validation.validatePassword)(password))) {
-              _context2.next = 7;
-              break;
-            }
-
-            _status.errorMsg.error = 'Please enter a valid email or password';
-            return _context2.abrupt("return", res.status(_status.status.bad).send(_status.errorMsg));
-
-          case 7:
             sql = "SELECT *\n               FROM users\n               WHERE useremail = $1";
-            _context2.prev = 8;
-            _context2.next = 11;
+            _context2.prev = 2;
+            _context2.next = 5;
             return _dbQuery["default"].query(sql, [email]);
 
-          case 11:
+          case 5:
             _yield$dbQuery$query2 = _context2.sent;
             rows = _yield$dbQuery$query2.rows;
             dbResponse = rows[0];
 
             if (dbResponse) {
-              _context2.next = 17;
+              _context2.next = 11;
               break;
             }
 
             _status.errorMsg.error = 'User with the email does not exist';
             return _context2.abrupt("return", res.status(_status.status.notfound).send(_status.errorMsg));
 
-          case 17:
+          case 11:
             if ((0, _validation.comparePassword)(dbResponse.password, password)) {
-              _context2.next = 20;
+              _context2.next = 14;
               break;
             }
 
             _status.errorMsg.error = 'The password you provided is incorrect';
             return _context2.abrupt("return", res.status(_status.status.bad).send(_status.errorMsg));
 
-          case 20:
-            token = (0, _validation.generateUserToken)(dbResponse.useremail, dbResponse.id, dbResponse.firstname, dbResponse.lastname, dbResponse.isadmin);
+          case 14:
+            token = (0, _validation.generateUserToken)(dbResponse.useremail, dbResponse.id, dbResponse.firstname, dbResponse.lastname);
             delete dbResponse.password;
             _status.successMsg.data = dbResponse;
             _status.successMsg.data.token = token;
             return _context2.abrupt("return", res.status(_status.status.success).send(_status.successMsg));
 
-          case 27:
-            _context2.prev = 27;
-            _context2.t0 = _context2["catch"](8);
+          case 21:
+            _context2.prev = 21;
+            _context2.t0 = _context2["catch"](2);
             _status.errorMsg.error = 'Operation was not successful';
             return _context2.abrupt("return", res.status(_status.status.error).send(_status.errorMsg));
 
-          case 31:
+          case 25:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[8, 27]]);
+    }, _callee2, null, [[2, 21]]);
   }));
 
   return function loginUser(_x3, _x4) {
