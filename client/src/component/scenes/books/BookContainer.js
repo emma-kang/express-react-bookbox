@@ -12,11 +12,11 @@ import DetailPage from './DetailPage';
 const useStyle = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    margin: '60px 15px 60px 15px',
+    margin: '30px 15px 60px 15px',
   },
   paper: {
     padding: theme.spacing(1),
-    textAlign: 'left'
+    textAlign: 'left',
   },
   title: {
     textAlign: 'center',
