@@ -31,6 +31,13 @@ const useStyles = makeStyles((theme) => ({
 const Header = (props) => {
     let history = useHistory();
     const classes = useStyles();
+
+    const clickLogout = () => {
+        sessionStorage.removeItem('token');
+        history.replace('/');
+        window.location.reload();
+    }
+
     return(
         <div>
             {/* Navigation */}
@@ -41,7 +48,10 @@ const Header = (props) => {
                         <div className={classes.navSubItem}>
                             <Button className={classes.navItem} onClick={() => history.push('/')}>Home</Button>
                             <Button className={classes.navItem} onClick={() => history.push('/books')}>Books</Button>
-                            <Button className={classes.navItem} onClick={() => history.push('/login')}>Login</Button>
+                            {(sessionStorage.getItem('token') !== null
+                            ? <Button className={classes.navItem} onClick={clickLogout}>Logout</Button>
+                            : <Button className={classes.navItem} onClick={() => history.push('/login')}>Login</Button>
+                            )}
                         </div>
                     </Toolbar>
                 </AppBar>
