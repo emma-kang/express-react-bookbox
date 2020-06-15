@@ -7,12 +7,13 @@ import bcrypt from 'bcryptjs';
  * @param {string} id
  * @returns {string} token
  */
-const generateUserToken = (email, id, firstname, lastname) => {
+const generateUserToken = (email, id, firstname, lastname, isadmin) => {
     const token = jwt.sign({
         email,
         user_id: id,
         firstname,
-        lastname
+        lastname,
+        isadmin
     },
     env.secret, { expiresIn: '1h'});
 
