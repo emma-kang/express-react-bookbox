@@ -18,12 +18,13 @@ var _bcryptjs = _interopRequireDefault(require("bcryptjs"));
  * @param {string} id
  * @returns {string} token
  */
-var generateUserToken = function generateUserToken(email, id, firstname, lastname) {
+var generateUserToken = function generateUserToken(email, id, firstname, lastname, isadmin) {
   var token = _jsonwebtoken["default"].sign({
     email: email,
     user_id: id,
     firstname: firstname,
-    lastname: lastname
+    lastname: lastname,
+    isadmin: isadmin
   }, _env["default"].secret, {
     expiresIn: '1h'
   });

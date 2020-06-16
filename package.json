@@ -26,7 +26,8 @@
     "pg": "^8.2.1",
     "pug": "2.0.0-beta11",
     "rimraf": "^3.0.2",
-    "swagger-ui-express": "^4.1.4"
+    "swagger-ui-express": "^4.1.4",
+    "yamljs": "^0.3.0"
   },
   "main": "app.js",
   "author": "Emma Kang",

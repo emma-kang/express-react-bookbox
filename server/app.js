@@ -1,11 +1,14 @@
+'use strict';
+
 import createError from 'http-errors';
 import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import cors from 'cors';
-// import swaggerUi from 'swagger-ui-express';
-// import { swaggerDocument } from "./swagger";
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+const swaggerDocument = YAML.load('swagger.yaml');
 
 import usersRouter from './routes/users';
 import bookRouter from './routes/books';
@@ -14,7 +17,7 @@ import commentRouter from './routes/comments';
 const app = express();
 
 app.use(cors());
-//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // view engine setup
 app.set('views', path.join(__dirname, '../views'));

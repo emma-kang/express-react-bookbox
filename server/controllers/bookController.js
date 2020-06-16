@@ -26,7 +26,7 @@ const getBookById = async (req, res) => {
     const sql = `SELECT * from books WHERE id=$1`;
 
     try {
-        const { rows } = await dbQuery.query(sql);
+        const { rows } = await dbQuery.query(sql, [bookId]);
         const dbResponse = rows;
 
         if (dbResponse[0] == undefined) {

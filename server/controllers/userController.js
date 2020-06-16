@@ -78,7 +78,6 @@ const loginUser = async (req, res) => {
   }
 };
 
-// get api/v1/admin/users 
 const getUsers = async (req, res) => {
   const sql = `SELECT * from users ORDER By id`;
 
@@ -100,7 +99,6 @@ const getUsers = async (req, res) => {
   }
 }
 
-// get api/v1/admin/users/:id
 const getUserById = async (req, res) => {
   const { userId } = req.params;
   const sql = `SELECT * from users WHERE id=$1`;
