@@ -1,0 +1,72 @@
+swagger: "3.0.0"
+info:
+  description: "This is the practice API doct for BookBox"
+  version: "3.0.1"
+  title: "Swagger BookBox"
+  contact:
+    email: "emma140626@gmail.com"
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
+host: "http://localhost:8080"
+basePath: "/"
+tags:
+- name: "books"
+  description: "Everything about Books"
+schemes:
+- "https"
+- "http"
+paths:
+  /books:
+    get:
+      tags:
+      - "books"
+      summary: "Get all book information"
+      description: ""
+      operationId: "getAllBooks"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+            description: A JSON array of books
+            content: 
+                application/json:
+                    schema:
+                        type: array
+                        items: 
+                            id: 
+                                type: integer
+                                format: int64
+                                example: 4
+                            title: 
+                                type: string
+                                example: Animal Farm
+                            authorid: 
+                                type: integer
+                                format: int64
+                                example: 6
+                            publisher: 
+                                type: string
+                                example: Penguin
+                            publised: 
+                                type: string
+                                format: date
+                            category: 
+                                type: string
+                                example: Novel
+                            isbn: 
+                                type: string
+                            language: 
+                                type: string
+                                example: English
+                            imageurl:
+                                type: string
+                            description: 
+                                type: string
+                            author: 
+                                type: string
+        "405":
+          description: "Invalid input"
+

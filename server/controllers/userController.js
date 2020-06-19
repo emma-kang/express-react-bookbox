@@ -11,12 +11,6 @@ import {
   errorMsg, successMsg, status
 } from "../helpers/status";
 
-/**
- * Create New User Method
- * @param req
- * @param res
- * @returns {Promise<*>}
- */
 
 const createNewUser = async (req, res) => {
   const {
@@ -36,7 +30,7 @@ const createNewUser = async (req, res) => {
     const dbResponse = rows[0];
     delete dbResponse.password;
     const token = generateUserToken(dbResponse.email, dbResponse.id,
-      dbResponse.firstname, dbResponse.lastname);
+      dbResponse.firstname, dbResponse.lastname, dbResponse.isadmin);
 
     successMsg.data = dbResponse;
     successMsg.data.token = token;
@@ -53,12 +47,7 @@ const createNewUser = async (req, res) => {
   }
 };
 
-/**
- * loginUser Method
- * @param req
- * @param res
- * @returns {Promise<*>}
- */
+
 const loginUser = async (req, res) => {
   const {email, password} = req.body;
 
@@ -78,7 +67,7 @@ const loginUser = async (req, res) => {
     }
 
     const token = generateUserToken(dbResponse.useremail, dbResponse.id,
-      dbResponse.firstname, dbResponse.lastname);
+      dbResponse.firstname, dbResponse.lastname, dbResponse.isadmin);
     delete dbResponse.password;
     successMsg.data = dbResponse;
     successMsg.data.token = token;
@@ -89,7 +78,52 @@ const loginUser = async (req, res) => {
   }
 };
 
+const getUsers = async (req, res) => {
+  const sql = `SELECT * from users ORDER By id`;
+
+  try {
+    const { rows } = await dbQuery.query(sql);
+    const dbResponse = rows;
+
+    if (dbResponse[0] == undefined) {
+      errorMsg.error = 'There is no stored users in the system';
+      return res.status(status.notfound).send(errorMsg);
+    }
+
+    successMsg.data = dbResponse;
+    return res.status(status.success).send(successMsg);
+
+  } catch (error) {
+    errorMsg.error = 'An error occurred while getting user data';
+    return res.status(status.error).send(errorMsg);
+  }
+}
+
+const getUserById = async (req, res) => {
+  const { userId } = req.params;
+  const sql = `SELECT * from users WHERE id=$1`;
+
+  try {
+      const { rows } = await dbQuery.query(sql, [userId]);
+      const dbResponse = rows[0];
+
+      if (!dbResponse) {
+          errorMsg.error = 'User with the id does not exist';
+          return res.status(status.notfound).send(errorMsg);
+      }
+
+      delete dbResponse.password;
+      successMsg.data = dbResponse;
+      return res.status(status.success).send(successMsg);
+  } catch (error) {
+      errorMsg.error = 'Operation was not successful';
+      return res.status(status.error).send(errorMsg);
+  }
+};
+
 export {
+  getUsers,
+  getUserById,
   createNewUser,
   loginUser
 }

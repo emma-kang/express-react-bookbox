@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
@@ -14,14 +14,21 @@ var _morgan = _interopRequireDefault(require("morgan"));
 
 var _cors = _interopRequireDefault(require("cors"));
 
-var _index = _interopRequireDefault(require("./routes/index"));
+var _swaggerUiExpress = _interopRequireDefault(require("swagger-ui-express"));
+
+var _yamljs = _interopRequireDefault(require("yamljs"));
 
 var _users = _interopRequireDefault(require("./routes/users"));
 
 var _books = _interopRequireDefault(require("./routes/books"));
 
+var _comments = _interopRequireDefault(require("./routes/comments"));
+
+var swaggerDocument = _yamljs["default"].load('swagger.yaml');
+
 var app = (0, _express["default"])();
-app.use((0, _cors["default"])()); // view engine setup
+app.use((0, _cors["default"])());
+app.use('/api-docs', _swaggerUiExpress["default"].serve, _swaggerUiExpress["default"].setup(swaggerDocument)); // view engine setup
 
 app.set('views', _path["default"].join(__dirname, '../views'));
 app.set('view engine', 'pug');
@@ -31,10 +38,9 @@ app.use(_express["default"].urlencoded({
   extended: false
 }));
 app.use((0, _cookieParser["default"])());
-app.use(_express["default"]["static"](_path["default"].join(__dirname, '../public')));
-app.use('/', _index["default"]);
-app.use('/api/users', _users["default"]);
-app.use('/api/books', _books["default"]); // catch 404 and forward to error handler
+app.use('/api/v1/users', _users["default"]);
+app.use('/api/v1/books', _books["default"]);
+app.use('/api/v1/comments', _comments["default"]); // catch 404 and forward to error handler
 
 app.use(function (req, res, next) {
   next((0, _httpErrors["default"])(404));

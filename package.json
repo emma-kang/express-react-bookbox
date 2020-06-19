@@ -25,7 +25,9 @@
     "npm-run-all": "^4.1.5",
     "pg": "^8.2.1",
     "pug": "2.0.0-beta11",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "swagger-ui-express": "^4.1.4",
+    "yamljs": "^0.3.0"
   },
   "main": "app.js",
   "author": "Emma Kang",
@@ -71,6 +73,9 @@
     "prod": "NODE_ENV=production npm-run-all build server",
     "clean": "rimraf dist-server",
     "watch:dev": "nodemon",
-    "test": "jest"
+    "start": "node ./server/bin/www"
+  },
+  "engines": {
+    "node": "12.17.0"
   }
 }
