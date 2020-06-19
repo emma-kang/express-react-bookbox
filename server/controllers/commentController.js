@@ -6,7 +6,7 @@ import {
 } from "../helpers/status";
 
 const getComments = async (req, res) => {
-    const sql = `SELECT * FROM comments returning *`;
+    const sql = `SELECT * FROM comments`;
 
     try {
         const { rows } = await dbQuery.query(sql);
