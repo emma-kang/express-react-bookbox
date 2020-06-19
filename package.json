@@ -73,9 +73,10 @@
     "prod": "NODE_ENV=production npm-run-all build server",
     "clean": "rimraf dist-server",
     "watch:dev": "nodemon",
-    "start": "node ./server/bin/www"
+    "start": "node --experimental-modules ./server/bin/www"
   },
   "engines": {
     "node": "12.17.0"
-  }
+  },
+  "type": "module"
 }
