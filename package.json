@@ -3,11 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@babel/cli": "^7.10.1",
-    "@babel/core": "^7.10.2",
-    "@babel/node": "^7.10.1",
-    "@babel/polyfill": "^7.10.1",
-    "@babel/preset-env": "^7.10.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cookie-parser": "~1.4.4",
@@ -22,10 +17,9 @@
     "moment": "^2.26.0",
     "morgan": "~1.9.1",
     "nodemon": "^2.0.4",
-    "npm-run-all": "^4.1.5",
     "pg": "^8.2.1",
-    "pug": "2.0.0-beta11",
-    "rimraf": "^3.0.2",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.21.13",
     "swagger-ui-express": "^4.1.4",
     "yamljs": "^0.3.0"
   },
@@ -33,50 +27,11 @@
   "author": "Emma Kang",
   "license": "ISC",
   "description": "",
-  "devDependencies": {
-    "@babel/plugin-transform-runtime": "^7.10.1",
-    "jest": "^26.0.1"
-  },
-  "nodemonConfig": {
-    "exec": "npm run dev",
-    "watch": [
-      "server/*",
-      "public/*"
-    ],
-    "ignore": [
-      "**/__tests__/**",
-      "*.test.js",
-      "*.spec.js"
-    ]
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "useBuiltIns": "entry"
-        }
-      ]
-    ],
-    "plugins": [
-      "@babel/plugin-transform-runtime"
-    ]
-  },
-  "jest": {
-    "testEnvironment": "node"
-  },
   "scripts": {
-    "build": "npm-run-all clean transpile",
-    "server": "node ./dist-server/bin/www",
-    "transpile": "babel ./server --out-dir dist-server",
-    "dev": "NODE_ENV=development npm-run-all build server",
-    "prod": "NODE_ENV=production npm-run-all build server",
-    "clean": "rimraf dist-server",
-    "watch:dev": "nodemon",
-    "start": "node --experimental-modules ./server/bin/www"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon bin/www"
   },
   "engines": {
     "node": "12.17.0"
-  },
-  "type": "module"
+  }
 }

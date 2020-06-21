@@ -1,18 +1,18 @@
 'use strict';
 
-import createError from 'http-errors';
-import express from 'express';
-import path from 'path';
-import cookieParser from 'cookie-parser';
-import logger from 'morgan';
-import cors from 'cors';
-import swaggerUi from 'swagger-ui-express';
-import YAML from 'yamljs';
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 const swaggerDocument = YAML.load('swagger.yaml');
 
-import usersRouter from './routes/users';
-import bookRouter from './routes/books';
-import commentRouter from './routes/comments';
+// const usersRouter = require('./routes/users');
+// const bookRouter = require('./routes/books');
+const commentRouter = require('./routes/comments');
 
 const app = express();
 
@@ -28,8 +28,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/api/v1/users', usersRouter);
-app.use('/api/v1/books', bookRouter);
+// app.use('/api/v1/users', usersRouter);
+// app.use('/api/v1/books', bookRouter);
 app.use('/api/v1/comments', commentRouter);
 
 // catch 404 and forward to error handler
