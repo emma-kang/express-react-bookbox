@@ -1,18 +1,19 @@
-const Sequelize = require('sequelize');
-
-const sequelize = require('../database/dbConnection');
-
-const Authors = sequelize.define('authors', {
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Authors = sequelize.define('Authors', {
     id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true, 
-        allowNull: false,
-        primaryKey: true
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true
     },
-    firstname: Sequelize.STRING,
-    lastname: Sequelize.STRING,
-    dob: Sequelize.DATE,
-    country: Sequelize.STRING
-});
-
-module.exports = Authors;
+    first_name: DataTypes.STRING,
+    last_name: DataTypes.STRING,
+    dob: DataTypes.DATE,
+    country: DataTypes.STRING
+  }, {});
+  Authors.associate = function(models) {
+    // associations can be defined here
+  };
+  return Authors;
+};

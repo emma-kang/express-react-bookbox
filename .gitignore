@@ -264,3 +264,4 @@ fabric.properties
 env.js
 .idea/dataSources.xml
 server/env.js
+config/config.json

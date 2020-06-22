@@ -1,25 +1,32 @@
-const Sequelize = require('sequelize');
-
-const sequelize = require('../database/dbConnection');
-const Users = require('./users');
-
-const Comments = sequelize.define('comments', {
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Comments = sequelize.define('Comments', {
     id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true, 
-        allowNull: false,
-        primaryKey: true
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true
     },
-    postingdate: Sequelize.DATE,
+    bookid: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Books,
+        key: 'id'
+      }
+    },
     userid: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-            model: Users,
-            key: 'id'
-        }
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Users,
+        key: 'id'
+      }
     },
-    body: Sequelize.STRING
-});
-
-module.exports = Comments;
+    body: DataTypes.STRING
+  }, {});
+  Comments.associate = function(models) {
+    // associations can be defined here
+  };
+  return Comments;
+};

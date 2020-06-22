@@ -1,32 +1,33 @@
-const Sequelize = require('sequelize');
-
-const sequelize = require('../database/dbConnection');
-
-const Books = sequelize.define('books', {
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Books = sequelize.define('Books', {
     id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true, 
-        allowNull: false,
-        primaryKey: true
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true
     },
-    title: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
+    title: DataTypes.STRING,
     authorid: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-            model: Authors,
-            key: 'id'
-        }
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Authors,
+        key: 'id'
+      }
     },
-    publisher: Sequelize.STRING,
-    published: Sequelize.DATE,
-    category: Sequelize.STRING,
-    isbn: Sequelize.STRING,
-    imageurl: Sequelize.STRING,
-    description: Sequelize.STRING
-});
-
-module.exports = Books;
+    publisher: DataTypes.STRING,
+    published: DataTypes.DATE,
+    category: DataTypes.STRING,
+    isbn: {
+      type: DataTypes.STRING,
+      unique: true
+    },
+    language: DataTypes.STRING,
+    imageurl: DataTypes.STRING
+  }, {});
+  Books.associate = function(models) {
+    // associations can be defined here
+  };
+  return Books;
+};
