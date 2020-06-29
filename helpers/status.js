@@ -1,6 +1,4 @@
-const successMsg = { status: 'success', data: []};
-const errorMsg = { status: 'error', error: '' };
-const status = {
+module.exports = {
     success: 200,
     error: 500,
     notfound: 404,
@@ -10,7 +8,3 @@ const status = {
     bad: 400,
     nocontent: 204
 };
-
-module.exports = successMsg;
-module.exports = errorMsg;
-module.exports = status;
