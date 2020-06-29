@@ -1,73 +1,77 @@
+const models = require('../models');
+const moment = require('moment');
 const _status = require('../helpers/status');
-const Comments = require('../models/comments');
+const _message = require('../helpers/message');
 
-exports.getComments = async (req, res) => {
-        Comments.findAll()
-          .then(comments => {
-            if (comments == null) {
-              _status.errorMsg.error = 'There is no stored comments';
-              return res.status(_status.status.notfound).send(_status.errorMsg);
-            }
-            _status.successMsg.data = comments;
-            return res.status(_status.status.success).send(_status.successMsg);
-          })
-          .catch(error => {
-            _status.errorMsg.error = 'An error occurred while getting data:' + error;
-            return res.status(_status.status.error).send(_status.errorMsg);
-          });
-    
-};
+const getComments = async (req, res) => {
+  const comments = await models.Comments.findAll()
+    .catch((err) => {
+      _message.error.message = 'An error occurred while getting data';
+      return res.status(_status.error).send(_message.error);
+    });
 
-// const moment = require('moment');
-// const dbQuery = require('../database/dbQuery');
+  if (comments == null) {
+    _message.error.message = 'No data';
+    return res.status(_status.nocontent).send(_message.error);
+  }
 
-// import {
-//   errorMsg, successMsg, status
-// } from "../helpers/status";
+  _message.success.data = comment;
 
-// const getComments = async (req, res) => {
-//     const sql = `SELECT * FROM comments`;
+  return res.status(_status.success).send(_message.success);
+}
 
-//     try {
-//         const { rows } = await dbQuery.query(sql);
-//         const dbResponse = rows;
+const getCommentByBook = async (req, res) => {
+  const { bookid } = req.params;
+  const comments = await models.Comments.findAll({
+    where: {
+      bookid: bookid
+    }
+  }).catch((err) => {
+    _message.error.message = 'An error occurred while getting data';
+    return res.status(_status.error).send(_message.error);
+  });
 
-//         if (dbResponse[0] == undefined) {
-//             errorMsg.error = 'There is no stored comments';
-//             return res.status(status.notfound).send(errorMsg);
-//         }
+  if (comments == null) {
+    _message.error.message = 'No data';
+    return res.status(_status.nocontent).send(_message.error);
+  }
 
-//         successMsg.data = dbResponse;
-//         return res.status(status.success).send(successMsg);
-//     } catch (error) {
-//         errorMsg.error = 'An error occurred while getting data';
-//         return res.status(status.error).send(errorMsg);
-//     }
+  _message.success.data = comments;
+  return res.status(_status.success).send(_message.success);
 
-// };
+}
 
-// const getCommentsByBook = async (req, res) => {
-//     const { bookId } = req.params;
-//     const sql = `SELECT * FROM comments WHERE bookid=$1`;
+const addNewComment = async (req, res) => {
+  const { body } = req.body;
+  const { bookid, userid } = req.params;
+  const postingdate = moment(new Date());
 
-//     try {
-//         const { rows } = await dbQuery.query(sql, [bookId]);
-//         const dbResponse = rows;
+  const newComment = await models.Comments.create(
+    {
+      bookid: bookid,
+      postingdate: postingdate,
+      userid: userid,
+      body: body
+    }
+  ).catch((err) => {
+    _message.error.message = 'An error occurred while getting data';
+    return res.status(_status.error).send(_message.error);
+  });
 
-//         if (dbResponse[0] == undefined) {
-//             errorMsg.error = 'There is no stored comments with the book';
-//             return res.status(status.notfound).send(errorMsg);
-//         }
+  if (newComment == null) {
+    _message.error.message = 'No data added';
+    return res.status(_status.error).send(_message.error);
+  }
 
-//         successMsg.data = dbResponse;
-//         return res.status(status.success).send(successMsg);
-//     } catch (error) {
-//         errorMsg.error = 'An error occurred while getting data';
-//         return res.status(status.error).send(errorMsg);
-//     }
-// };
+  _message.success.data = newComment;
+  return res.status(_status.success).send(_message.success);
 
-// export {
-//     getComments,
-//     getCommentsByBook
-// }
+}
+
+
+// update comment, delete comment
+
+module.exports = {
+  getComments,
+  getCommentByBook
+}

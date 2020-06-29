@@ -1,103 +1,122 @@
-// const dbQuery = require('../database/dbQuery');
+const models = require('../models');
+const _status = require('../helpers/status');
+const _message = require('../helpers/message');
 
-// const _status = require('../helpers/status');
+const getBooks = async (req, res) => {
+  const books = await models.Books.findAll()
+    .catch((err) => {
+      console.log(err);
+      _message.error.message = 'An error occurred while getting data';
+      return res.status(_status.error).send(_message.error);
+    });
 
-// exports.getAllBooks = async (req, res) => {
-//     const sql = `SELECT b.*, CONCAT(a.firstname, ' ', a.lastname) author
-//                  FROM books b JOIN authors a on b.authorid = a.id ORDER BY b.id ASC`;
-//     try {
-//         const { rows } = await dbQuery.query(sql);
-//         const dbResponse = rows;
+  if (books == null) {
+    _message.error.message = 'No data';
+    return res.status(_status.notfound).send(_message.error);
+  }
 
-//         if (dbResponse[0] == undefined) {
-//             errorMsg.error = 'There is no stored book in the system';
-//             return res.status(status.notfound).send(errorMsg);
-//         }
-//         successMsg.data = dbResponse;
-//         return res.status(status.success).send(successMsg);
-//     } catch (error) {
-//         errorMsg.error = 'An error occurred while getting data';
-//         return res.status(status.error).send(errorMsg);
-//     }
-// };
+  _message.success.data = books;
+  return res.status(_status.success).send(_message.success);
+}
 
-// exports.getBookById = async (req, res) => {
-//     const { bookId } = req.params.bookId;
-//     const sql = `SELECT * from books WHERE id=$1`;
+const getBooksWithAuthor = async (req, res) => {
+  models.Books.hasOne(models.Authors, {
+    foreignKey: 'id'
+  });
 
-//     try {
-//         const { rows } = await dbQuery.query(sql, [bookId]);
-//         const dbResponse = rows;
+  const books = await models.Books.findAll({
+    include: [
+      {
+        model: models.Authors,
+        attributes: ['first_name', 'last_name']
+      }
+    ]
+  }).catch((err) => {
+    console.log(err);
+    _message.error.message = 'An error occurred while getting data';
+    return res.status(_status.error).send(_message.error);
+  });
 
-//         if (dbResponse[0] == undefined) {
-//             errorMsg.error = 'The book with the book id does not exist';
-//             return res.status(status.notfound).send(errorMsg);
-//         }
+  if (books == null) {
+    _message.error.message = 'No data';
+    return res.status(_status.notfound).send(_message.error);
+  }
 
-//         successMsg.data = dbResponse;
-//         return res.status(status.success).send(successMsg);
-//     } catch (error) {
-//         errorMsg.error = 'An error occurred while getting data';
-//         return res.status(status.error).send(errorMsg);
-//     }
-// };
+  _message.success.data = books;
+  return res.status(_status.success).send(_message.success);
+}
 
-// exports.updateBook = async (req, res) => {
-//     const { bookId } = req.params;
-//     const { title, publisher, published, category, isbn, language, imageurl, description } = req.body;
-//     const { isadmin } = req.user;
-//     const sql = `UPDATE books 
-//                  SET title=$1, publisher=$2, published=$3
-//                     , category=$4, isbn=$5, language=$6, imageurl=$7
-//                     , description=$8 WHERE id=$8 returning *`;
+const getBookById = async (req, res) => {
+  const { bookid } = req.params;
+  const book = await models.Books.findByPk(bookid)
+    .catch((err) => {
+      console.log(err);
+      _message.error.message = 'An error occurred while getting data';
+      return res.status(_status.error).send(_message.error);
+    });
 
-//     const values = [title, publisher, published, category, isbn, language, imageurl, description, bookId];
+  if (book == null) {
+    _message.error.message = 'No data';
+    return res.status(_status.notfound).send(_message.error);
+  }
 
-//     if (isadmin !== 1) {
-//         errorMsg.error = 'You are unauthoried to update book information';
-//         return res.status(status.bad).send(errorMsg);
-//     }
+  _message.success.data = book;
+  return res.status(_status.success).send(_message.success);
+}
 
-//     try {
-//         const { rows } = await dbQuery.query(sql, values);
-//         const dbResponse = rows[0];
+// Admin
 
-//         if (!dbResponse) {
-//             errorMsg.error = 'There is no book with the id';
-//             return res.status(status.notfound).send(errorMsg);
-//         }
+const addNewBook = async (req, res) => {
+  const { title, authorid, publisher, published, category, language, imageurl } = req.body;
 
-//         successMsg.data = dbResponse;
-//         return res.status(status.success).send(successMsg);
-//     } catch (error) {
-//         errorMsg.error = 'An error occurred while updating the data';
-//         return res.status(status.error).send(errorMsg);
-//     }
-// }
+  const [ newBook, created ] = await models.Books.findOrCreate({
+    where: { title: title, publisher: publisher, language: language },
+    defaults: {
+      authorid: authorid,
+      published: published,
+      category: category,
+      imageurl: imageurl
+    }
+  }).catch((err) => {
+    _message.error.message = 'An error occurred while getting data';
+    return res.status(_status.error).send(_message.error);
+  });
 
-// exports.deleteBook = async (req, res) => {
-//     const bookId = req.params.bookId;
-//     const isadmin = req.user;
-//     const sql = `DELETE FROM books WHERE id=$1 returning *`;
+  if (created) {
+    _message.error.message = 'Already existed book. Please check the information';
+    return res.status(_status.conflict).send(_message.error);
+  }
 
-//     if (isadmin !== 1) {
-//         errorMsg.error = 'You are unauthoried to remove book information';
-//         return res.status(status.bad).send(errorMsg);
-//     } 
+  _message.success.data = newBook;
+  return res.status(_status.success).send(_message.success);
 
-//     try {
-//         const rows = await dbQuery.query(sql, [bookId]);
-//         const dbResponse = rows[0];
+}
 
-//         if (!dbResponse) {
-//             errorMsg.error = 'There is no book with the id';
-//             return res.status(status.notfound).send(errorMsg);
-//         }
+const deleteBook = async (req, res) => {
+  const { bookid } = req.params;
+  const book = await models.Books.destroy({
+    where: { id: bookid }
+  }).catch((err) => {
+    _message.error.message = 'An error occurred while getting data';
+    return res.status(_status.error).send(_message.error);
+  });
 
-//         successMsg.data = {};
-//         successMsg.data.message = 'The book deleted successfully';
-//         return res.status(status.success).send(successMsg);
-//     } catch (error) {
-//         return res.status(status.error).send(error);
-//     }
-// };
+  if (book == null) {
+    _message.error.message = 'No data deleted';
+    return res.status(_status.notfound).send(_message.error);
+  }
+
+  _message.success.data = {};
+  return res.status(_status.success).send(_message.success);
+}
+
+// update book
+
+
+module.exports = {
+  getBooks,
+  getBookById,
+  getBooksWithAuthor,
+  addNewBook,
+  deleteBook
+}

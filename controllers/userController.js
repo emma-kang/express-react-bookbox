@@ -1,129 +1,123 @@
-// import moment from 'moment';
-// import dbQuery from "../database/dbQuery";
+const moment = require('moment');
+const models = require('../models');
+const _status = require('../helpers/status');
+const _message = require('../helpers/message');
+const validation = require('../helpers/validation');
 
-// import {
-//   hashPassword,
-//   comparePassword,
-//   generateUserToken
-// } from "../helpers/validation";
+const getUsers = async (req, res) => {
+  const users = await models.Users.findAll()
+    .catch((err) => {
+      console.log(err);
+      _message.error.message = 'An error occurred while getting data';
+      return res.status(_status.error).send(_message.error);
+    });
 
-// import {
-//   errorMsg, successMsg, status
-// } from "../helpers/status";
+  if (users == null) {
+    _message.error.message = 'No data';
+    return res.status(_status.notfound).send(_message.error);
+  }
 
+  _message.success.data = users;
+  return res.status(_status.success).send(_message.success);
+}
 
-// const createNewUser = async (req, res) => {
-//   const {
-//     email, first_name, last_name, password
-//   } = req.body;
+const getUserById = async (req, res) => {
+  const { userid } = req.params;
+  const user = await models.Users.findByPk(userid)
+    .catch((err) => {
+      _message.error.message = 'An error occurred while getting data';
+      return res.status(_status.error).send(_message.error);
+    });
 
-//   const createdDate = moment(new Date());
-//   const hashedPassword = hashPassword(password);
-//   const sql = `INSERT INTO users (useremail, password, firstname, lastname, createddate)
-//                values ($1, $2, $3, $4, $5)
-//                returning *`;
+  if (user == null) {
+    _message.error.message = 'No data';
+    return res.status(_status.notfound).send(_message.error);
+  }
 
-//   const values = [email, hashedPassword, first_name, last_name, createdDate];
+  _message.success.data = user;
+  return res.status(_status.success).send(_message.success);
+}
 
-//   try {
-//     const {rows} = await dbQuery.query(sql, values);
-//     const dbResponse = rows[0];
-//     delete dbResponse.password;
-//     const token = generateUserToken(dbResponse.email, dbResponse.id,
-//       dbResponse.firstname, dbResponse.lastname, dbResponse.isadmin);
+const createNewUser = async (req, res) => {
+  const { email, first_name, last_name, password } = req.body;
+  // const createdDate = moment(new Date());
+  const hashedPassword = validation.hashPassword(password);
 
-//     successMsg.data = dbResponse;
-//     successMsg.data.token = token;
+  const [newUser, created] = await models.Users.findOrCreate({
+    where: { useremail: email },
+    defaults: {
+      first_name: first_name,
+      last_name: last_name,
+      password: hashedPassword
+    }
+  }).catch((err) => {
+    _message.error.message = 'An error occurred while getting data';
+    return res.status(_status.error).send(_message.error);
+  });
 
-//     return res.status(status.created).send(successMsg);
+  if (created) {
+    _message.error.message = 'Already existed user email';
+    return res.status(_status.conflict).send(_message.error);
+  }
 
-//   } catch (error) {
-//     if (error.routine === '_bt_check_unique') {
-//       errorMsg.error = 'User with that Email already exist';
-//       return res.status(status.conflict).send(errorMsg);
-//     }
-//     errorMsg.error = 'Operation was not successful';
-//     return res.status(status.error).send(errorMsg);
-//   }
-// };
+  const token = validation.generateUserToken(newUser.useremail, newUser.id, newUser.first_name
+      , newUser.last_name, newUser.isadmin);
 
+  _message.success.data = { token };
 
-// const loginUser = async (req, res) => {
-//   const {email, password} = req.body;
+  return res.status(_status.success).send(_message.success);
+}
 
-//   const sql = `SELECT *
-//                FROM users
-//                WHERE useremail = $1`;
-//   try {
-//     const {rows} = await dbQuery.query(sql, [email]);
-//     const dbResponse = rows[0];
-//     if (!dbResponse) {
-//       errorMsg.error = 'User with the email does not exist';
-//       return res.status(status.notfound).send(errorMsg);
-//     }
-//     if (!comparePassword(dbResponse.password, password)) {
-//       errorMsg.error = 'The password you provided is incorrect';
-//       return res.status(status.bad).send(errorMsg);
-//     }
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await models.User.findOne({ where: { useremail: email } })
+    .catch((err) => {
+      _message.error.message = 'An error occurred while getting data';
+      return res.status(_status.error).send(_message.error);
+    });
 
-//     const token = generateUserToken(dbResponse.useremail, dbResponse.id,
-//       dbResponse.firstname, dbResponse.lastname, dbResponse.isadmin);
-//     delete dbResponse.password;
-//     successMsg.data = dbResponse;
-//     successMsg.data.token = token;
-//     return res.status(status.success).send(successMsg);
-//   } catch (error) {
-//     errorMsg.error = 'Operation was not successful';
-//     return res.status(status.error).send(errorMsg);
-//   }
-// };
+  if (user == null) {
+    _message.error.message = 'No existed user with the email';
+    return res.status(_status.notfound).send(_message.error);
+  }
 
-// const getUsers = async (req, res) => {
-//   const sql = `SELECT * from users ORDER By id`;
+  if (!validation.comparePassword(user.password, password)) {
+    _message.error.message = 'Incorrect Password';
+    return res.status(_status.bad).send(_message.error);
+  }
 
-//   try {
-//     const { rows } = await dbQuery.query(sql);
-//     const dbResponse = rows;
+  const token = validation.generateUserToken(user.useremail, user.id, user.first_name, user.last_name, user.isadmin);
 
-//     if (dbResponse[0] == undefined) {
-//       errorMsg.error = 'There is no stored users in the system';
-//       return res.status(status.notfound).send(errorMsg);
-//     }
+  _message.success.data = { token };
+  return res.status(_status.success).send(_message.success);
 
-//     successMsg.data = dbResponse;
-//     return res.status(status.success).send(successMsg);
+}
 
-//   } catch (error) {
-//     errorMsg.error = 'An error occurred while getting user data';
-//     return res.status(status.error).send(errorMsg);
-//   }
-// }
+const updateToAdmin = async (req, res) => {
+  const { userid } = req.params;
 
-// const getUserById = async (req, res) => {
-//   const { userId } = req.params;
-//   const sql = `SELECT * from users WHERE id=$1`;
+  const admin = await models.Users.update({ isadmin: true }, {
+    where: {
+      id: userid
+    }
+  }).catch((err) => {
+    _message.error.message = 'An error occurred while getting data';
+    return res.status(_status.error).send(_message.error);
+  });
 
-//   try {
-//       const { rows } = await dbQuery.query(sql, [userId]);
-//       const dbResponse = rows[0];
+  if (admin == null) {
+    _message.error.message = 'There is no updated user';
+    return res.status(_status.notfound).send(_message.error);
+  }
 
-//       if (!dbResponse) {
-//           errorMsg.error = 'User with the id does not exist';
-//           return res.status(status.notfound).send(errorMsg);
-//       }
+  _message.success.data = admin;
+  return res.status(_status.success).send(_message.success);
+}
 
-//       delete dbResponse.password;
-//       successMsg.data = dbResponse;
-//       return res.status(status.success).send(successMsg);
-//   } catch (error) {
-//       errorMsg.error = 'Operation was not successful';
-//       return res.status(status.error).send(errorMsg);
-//   }
-// };
-
-// export {
-//   getUsers,
-//   getUserById,
-//   createNewUser,
-//   loginUser
-// }
+module.exports = {
+  getUsers,
+  getUserById,
+  createNewUser,
+  loginUser,
+  updateToAdmin
+}
