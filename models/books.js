@@ -1,4 +1,6 @@
 'use strict';
+const Authors = require('../models/authors');
+
 module.exports = (sequelize, DataTypes) => {
   const Books = sequelize.define('Books', {
     id: {

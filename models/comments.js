@@ -1,4 +1,8 @@
 'use strict';
+
+const Books = require('../models/books');
+const Users = require('../models/users');
+
 module.exports = (sequelize, DataTypes) => {
   const Comments = sequelize.define('Comments', {
     id: {
