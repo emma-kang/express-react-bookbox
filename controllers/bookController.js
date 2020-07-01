@@ -6,17 +6,17 @@ const getBooks = async (req, res) => {
   const books = await models.Books.findAll()
     .catch((err) => {
       console.log(err);
-      _message.error.message = 'An error occurred while getting data';
-      return res.status(_status.error).send(_message.error);
+      _message.error.message = 'An error occurred while operating data';
+      return res.status(_status.error).json(_message.error);
     });
 
   if (books == null) {
     _message.error.message = 'No data';
-    return res.status(_status.notfound).send(_message.error);
+    return res.status(_status.notfound).json(_message.error);
   }
 
   _message.success.data = books;
-  return res.status(_status.success).send(_message.success);
+  return res.status(_status.success).json(_message.success);
 }
 
 const getBooksWithAuthor = async (req, res) => {
@@ -33,17 +33,17 @@ const getBooksWithAuthor = async (req, res) => {
     ]
   }).catch((err) => {
     console.log(err);
-    _message.error.message = 'An error occurred while getting data';
-    return res.status(_status.error).send(_message.error);
+    _message.error.message = 'An error occurred while operating data';
+    return res.status(_status.error).json(_message.error);
   });
 
   if (books == null) {
     _message.error.message = 'No data';
-    return res.status(_status.notfound).send(_message.error);
+    return res.status(_status.notfound).json(_message.error);
   }
 
   _message.success.data = books;
-  return res.status(_status.success).send(_message.success);
+  return res.status(_status.success).json(_message.success);
 }
 
 const getBookById = async (req, res) => {
@@ -51,17 +51,17 @@ const getBookById = async (req, res) => {
   const book = await models.Books.findByPk(bookid)
     .catch((err) => {
       console.log(err);
-      _message.error.message = 'An error occurred while getting data';
-      return res.status(_status.error).send(_message.error);
+      _message.error.message = 'An error occurred while operating data';
+      return res.status(_status.error).json(_message.error);
     });
 
   if (book == null) {
     _message.error.message = 'No data';
-    return res.status(_status.notfound).send(_message.error);
+    return res.status(_status.notfound).json(_message.error);
   }
 
   _message.success.data = book;
-  return res.status(_status.success).send(_message.success);
+  return res.status(_status.success).json(_message.success);
 }
 
 // Admin
@@ -78,17 +78,17 @@ const addNewBook = async (req, res) => {
       imageurl: imageurl
     }
   }).catch((err) => {
-    _message.error.message = 'An error occurred while getting data';
-    return res.status(_status.error).send(_message.error);
+    _message.error.message = 'An error occurred while operating data';
+    return res.status(_status.error).json(_message.error);
   });
 
   if (created) {
     _message.error.message = 'Already existed book. Please check the information';
-    return res.status(_status.conflict).send(_message.error);
+    return res.status(_status.conflict).json(_message.error);
   }
 
   _message.success.data = newBook;
-  return res.status(_status.success).send(_message.success);
+  return res.status(_status.created).json(_message.success);
 
 }
 
@@ -97,26 +97,48 @@ const deleteBook = async (req, res) => {
   const book = await models.Books.destroy({
     where: { id: bookid }
   }).catch((err) => {
-    _message.error.message = 'An error occurred while getting data';
-    return res.status(_status.error).send(_message.error);
+    _message.error.message = 'An error occurred while operating data';
+    return res.status(_status.error).json(_message.error);
   });
 
   if (book == null) {
     _message.error.message = 'No data deleted';
-    return res.status(_status.notfound).send(_message.error);
+    return res.status(_status.notfound).json(_message.error);
   }
 
   _message.success.data = {};
-  return res.status(_status.success).send(_message.success);
+  return res.status(_status.success).json(_message.success);
 }
 
 // update book
+const updateBook = async (req, res) => {
+  const { bookid } = req.params;
+  const { imageurl, description } = req.body;
 
+  const book = await models.Books.update({ imageurl: imageurl, description: description }, {
+    where: {
+      id: bookid
+    }
+  }).catch((err) => {
+    _message.error.message = 'An error occurred while operating data';
+    return res.status(_status.error).json(_message.error);
+  });
+
+  if (book == null) {
+    _message.error.message = 'No matching data with the book id';
+    return res.status(_status.notfound).json(_message.error);
+  }
+
+  _message.success.data = book;
+  return res.status(_status.success).json(_message.success);
+
+}
 
 module.exports = {
   getBooks,
   getBookById,
   getBooksWithAuthor,
   addNewBook,
-  deleteBook
+  deleteBook,
+  updateBook
 }
