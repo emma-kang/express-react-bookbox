@@ -13,7 +13,8 @@ module.exports = {
       language: 'English',
       imageurl: null,
       createdAt: '2020-06-20',
-      updatedAt: '2020-06-20'
+      updatedAt: '2020-06-30',
+      description: 'All animals are equal. But some animals are more equal than others.'
     },
       {
         id: 2,
@@ -26,7 +27,8 @@ module.exports = {
         language: 'English',
         imageurl: null,
         createdAt: '2020-06-20',
-        updatedAt: '2020-06-20'
+        updatedAt: '2020-06-30',
+        description: 'Nineteen Eighty-Four centres on the consequences of government over-reach, totalitarianism, mass surveillance, and repressive regimentation of all persons and behaviours within society'
       },
       {
         id: 3,
@@ -39,7 +41,8 @@ module.exports = {
         language: 'English',
         imageurl: null,
         createdAt: '2020-06-20',
-        updatedAt: '2020-06-20'
+        updatedAt: '2020-06-30',
+        description: 'Every day, we make decisions on topics ranging from personal investments to schools for our children to the meals we eat to the causes we champion.'
       },
       {
         id: 4,
@@ -52,7 +55,8 @@ module.exports = {
         language: 'English',
         imageurl: null,
         createdAt: '2020-06-20',
-        updatedAt: '2020-06-20'
+        updatedAt: '2020-06-30',
+        description: 'Before the nightmare, Yeong-hye and her husband lived an ordinary life. But when splintering, blood-soaked images start haunting her thoughts, Yeong-hye decides to purge her mind and renounce eating meat.'
       }
     ], {});
   },
