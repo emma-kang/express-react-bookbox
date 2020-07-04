@@ -1,6 +1,6 @@
 {
   "name": "bookbox-api",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -30,10 +30,10 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon bin/www"
+    "start": "node bin/www"
   },
   "engines": {
-    "node": "12.17.0"
+    "node": "8.11.4"
   },
   "devDependencies": {
     "sequelize-cli": "^5.5.1"
