@@ -6,18 +6,18 @@ const _message = require('../helpers/message');
 const getComments = async (req, res) => {
   const comments = await models.Comments.findAll()
     .catch((err) => {
-      _message.error.message = 'An error occurred while getting data';
-      return res.status(_status.error).send(_message.error);
+      _message.error.message = 'An error occurred while operating data';
+      return res.status(_status.error).json(_message.error);
     });
 
   if (comments == null) {
     _message.error.message = 'No data';
-    return res.status(_status.nocontent).send(_message.error);
+    return res.status(_status.nocontent).json(_message.error);
   }
 
   _message.success.data = comment;
 
-  return res.status(_status.success).send(_message.success);
+  return res.status(_status.success).json(_message.success);
 }
 
 const getCommentByBook = async (req, res) => {
@@ -27,17 +27,17 @@ const getCommentByBook = async (req, res) => {
       bookid: bookid
     }
   }).catch((err) => {
-    _message.error.message = 'An error occurred while getting data';
-    return res.status(_status.error).send(_message.error);
+    _message.error.message = 'An error occurred while operating data';
+    return res.status(_status.error).json(_message.error);
   });
 
   if (comments == null) {
     _message.error.message = 'No data';
-    return res.status(_status.nocontent).send(_message.error);
+    return res.status(_status.nocontent).json(_message.error);
   }
 
   _message.success.data = comments;
-  return res.status(_status.success).send(_message.success);
+  return res.status(_status.success).json(_message.success);
 
 }
 
@@ -54,24 +54,24 @@ const addNewComment = async (req, res) => {
       body: body
     }
   ).catch((err) => {
-    _message.error.message = 'An error occurred while getting data';
-    return res.status(_status.error).send(_message.error);
+    _message.error.message = 'An error occurred while operating data';
+    return res.status(_status.error).json(_message.error);
   });
 
   if (newComment == null) {
     _message.error.message = 'No data added';
-    return res.status(_status.error).send(_message.error);
+    return res.status(_status.error).json(_message.error);
   }
 
   _message.success.data = newComment;
-  return res.status(_status.success).send(_message.success);
+  return res.status(_status.success).json(_message.success);
 
 }
-
-
 // update comment, delete comment
+
 
 module.exports = {
   getComments,
-  getCommentByBook
+  getCommentByBook,
+  addNewComment,
 }
