@@ -4,6 +4,11 @@ const _status = require('../helpers/status');
 const _message = require('../helpers/message');
 const validation = require('../helpers/validation');
 
+/**
+ * Get All Users
+ * @param {*} req
+ * @returns {object} 
+ */
 const getUsers = async (req, res) => {
   const users = await models.Users.findAll()
     .catch((err) => {
@@ -21,6 +26,11 @@ const getUsers = async (req, res) => {
   return res.status(_status.success).json(_message.success);
 }
 
+/**
+ * Get User by id 
+ * @param {int} userId 
+ * @returns {object}
+ */
 const getUserById = async (req, res) => {
   const { userid } = req.params;
   const user = await models.Users.findByPk(userid)
@@ -38,6 +48,11 @@ const getUserById = async (req, res) => {
   return res.status(_status.success).json(_message.success);
 }
 
+/**
+ * Create new User - Sign up 
+ * @param {object} newUserInfo 
+ * @returns {object}
+ */
 const createNewUser = async (req, res) => {
   const { email, first_name, last_name, password } = req.body;
   // const createdDate = moment(new Date());
@@ -68,6 +83,11 @@ const createNewUser = async (req, res) => {
   return res.status(_status.success).json(_message.success);
 }
 
+/**
+ * Login User 
+ * @param {object} userCredential 
+ * @returns {object}
+ */
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await models.User.findOne({ where: { useremail: email } })
@@ -93,6 +113,12 @@ const loginUser = async (req, res) => {
 
 }
 
+/**
+ * Only Admin User
+ * update to admin 
+ * @param {int} userId 
+ * @returns {object}
+ */
 const updateToAdmin = async (req, res) => {
   const { userid } = req.params;
 

@@ -2,6 +2,10 @@ const models = require('../models');
 const _status = require('../helpers/status');
 const _message = require('../helpers/message');
 
+/**
+ * Get All authors
+ * @returns {object}
+ */
 const getAuthors = async (req, res) => {
   const authors = await models.Authors.findAll()
     .catch((err) => {
@@ -20,6 +24,11 @@ const getAuthors = async (req, res) => {
 
 };
 
+/**
+ * Get Author by Author ID
+ * @param {int} authorId 
+ * @returns {object}
+ */
 const getAuthorById = async (req, res) => {
   const { authorid } = req.params;
   const author = await models.Authors.findByPk(authorid)
@@ -38,7 +47,12 @@ const getAuthorById = async (req, res) => {
   return res.status(_status.success).json(_message.success);
 }
 
-
+/**
+ * Only Admin User
+ * Add new Author infomation 
+ * @param {object} newInfo
+ * @returns {object}
+ */
 const addNewAuthor = async (req, res) => {
   const { firstname, lastname, birthdate, country } = req.body;
 
@@ -62,6 +76,13 @@ const addNewAuthor = async (req, res) => {
   return res.status(_status.created).json(_message.success);
 }
 
+/**
+ * Only Admin User
+ * Update Author Info
+ * @param {int} authorId  
+ * @param {object} authorInfoContents
+ * @returns {object} 
+ */
 const updateAuthor = async (req, res) => {
   const { authorid } = req.params;
   const { firstname, lastname, dob, country } = req.body;
@@ -84,7 +105,12 @@ const updateAuthor = async (req, res) => {
   return res.status(_status.success).json(_message.success);
 };
 
-
+/**
+ * Only Admin User
+ * Delete Author 
+ * @param {int} authorId 
+ * @returns {object}
+ */
 const deleteAuthor = async (req, res) => {
   const { authorid } = req.params;
 

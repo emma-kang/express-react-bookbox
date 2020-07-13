@@ -2,6 +2,11 @@ const models = require('../models');
 const _status = require('../helpers/status');
 const _message = require('../helpers/message');
 
+/**
+ * Get All books 
+ * @param {*} req 
+ * @returns {object} 
+ */
 const getBooks = async (req, res) => {
   const books = await models.Books.findAll()
     .catch((err) => {
@@ -19,6 +24,11 @@ const getBooks = async (req, res) => {
   return res.status(_status.success).json(_message.success);
 }
 
+/**
+ * Get books by Author Id
+ * @param {int} authorId  
+ * @returns {object}
+ */
 const getBooksWithAuthor = async (req, res) => {
   models.Books.hasOne(models.Authors, {
     foreignKey: 'id'
@@ -46,6 +56,11 @@ const getBooksWithAuthor = async (req, res) => {
   return res.status(_status.success).json(_message.success);
 }
 
+/**
+ * Get book by bookId
+ * @param {int} bookId 
+ * @returns {object}
+ */
 const getBookById = async (req, res) => {
   const { bookid } = req.params;
   const book = await models.Books.findByPk(bookid)
@@ -64,8 +79,12 @@ const getBookById = async (req, res) => {
   return res.status(_status.success).json(_message.success);
 }
 
-// Admin
-
+/**
+ * Only Admin user
+ * Add new Book 
+ * @param {object} bookInfo 
+ * @returns {object}
+ */
 const addNewBook = async (req, res) => {
   const { title, authorid, publisher, published, category, language, imageurl } = req.body;
 
@@ -92,6 +111,12 @@ const addNewBook = async (req, res) => {
 
 }
 
+/**
+ * Only Admin User
+ * Delete Book
+ * @param {int} bookId 
+ * @returns {object}
+ */
 const deleteBook = async (req, res) => {
   const { bookid } = req.params;
   const book = await models.Books.destroy({
@@ -110,7 +135,12 @@ const deleteBook = async (req, res) => {
   return res.status(_status.success).json(_message.success);
 }
 
-// update book
+/**
+ * Only Admin User
+ * Update Book 
+ * @param {int} bookId 
+ * @returns {object}
+ */
 const updateBook = async (req, res) => {
   const { bookid } = req.params;
   const { imageurl, description } = req.body;
