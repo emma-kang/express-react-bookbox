@@ -1,6 +1,6 @@
 swagger: "2.0.0"
 info:
-  description: "This is the practice API doct for BookBox"
+  description: "This is the practice API documents for BookBox"
   version: "1.0.0"
   title: "Swagger BookBox"
   contact:
@@ -8,11 +8,19 @@ info:
   license:
     name: "MIT"
     url: "https://opensource.org/licenses/MIT"
-host: "localhost:8080"
+host: "express-react-bookbox.herokuapp.com"
 basePath: "/api/v1"
 tags:
 - name: "books"
   description: "Everything about Books"
+- name: "users"
+  description: "Operations for users"
+- name: "authors"
+  description: "Everything about authors"
+- name: "comments"
+  description: "User comments for books"
+- name: "admin"
+  description: "Operations for admin user"
 schemes:
 - "https"
 - "http"
@@ -22,7 +30,7 @@ paths:
       tags:
       - "books"
       summary: "Get all book information"
-      description: "Return all pet information"
+      description: "Return all book information"
       operationId: "getAllBooks"
       consumes:
       - "application/json"
@@ -32,21 +40,570 @@ paths:
         "200":
           description: "success"
           schema:
-            $ref: "#/definitions/books"
+            $ref: "#/definitions/book"
         "404":
           description: "not found data"
-          schema:
-            $ref: "#/definitions/error"
-        "409":
-          description: "conflict"
-          schema:
-            $ref: "#/definitions/error"
         "500":
           description: "operating error"
+      x-swagger-router-controller: "books"
+  /books/{bookid}:
+    get:
+      tags:
+      - "books"
+      summary: "Get book information by book id"
+      description: "Return one book information"
+      operationId: "getBookById"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "bookid"
+        in: "path"
+        description: "ID of book to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "success"
           schema:
-            $ref: "#/definitions/error"
+            $ref: "#/definitions/book"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "books"
+  /books/{authorid}:
+    get:
+      tags: 
+      - "books"
+      summary: "Get all books by author id"
+      description: ""
+      operationId: "getBooksWithAuthor"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "authorid"
+        in: "path"
+        description: "ID of author to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "success"
+          schema:
+            $ref: "#/definitions/book"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "books"
+  /users:
+    get:
+      tags:
+        - "users"
+      summary: "Get all user information"
+      description: "Return users information"
+      operationId: "getUsers"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "success"
+          schema:
+            $ref: "#/definitions/user"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "users"
+  /users/{userid}:
+    get:
+      tags:
+        - "users"
+      summary: "Get user information by user id"
+      description: "Return one user information"
+      operationId: "getUserById"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "userid"
+          in: "path"
+          description: "ID of user to return"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "200":
+          description: "success"
+          schema:
+            $ref: "#/definitions/user"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "users"
+  /users/login: 
+    post: 
+      tags: 
+        - "users"
+      summary: "Logs user into the system"
+      description: ""
+      operationId: "loginUser"
+      produces: 
+        - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "list of user credendials"
+        require: true
+        schema: 
+          $ref: "#/definitions/loginUser"
+      responses:
+        "200":
+          description: "successful operation returning token"
+          schema: 
+            $ref: "#/definitions/sucess"
+        "404":
+          description: "No existed user with the email"
+        "400":
+          description: "Invalid password input"
+        "500":
+          description: "operation error"
+      x-swagger-router-controller: "users"
+  /users/signup:
+    post:
+      tags:
+        - "users"
+      summary: "Create new user account"
+      description: ""
+      operationId: "createNewUser"
+      produces:
+        - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "user information to create account"
+        require: true
+        schema:
+          $ref: "#/definitions/user"
+      responses:
+        "200":
+          description: "successful operation returning token"
+        "409":
+          description: "already existed user information"
+      x-swagger-router-controller: "users"
+  /authors:
+    get:
+      tags:
+        - "authors"
+      summary: "all stored author information"
+      description: ""
+      operationId: "getAuthors"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "success"
+          schema:
+            $ref: "#/definitions/author"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "authors"
+  /authors/{authorid}:
+    get:
+      tags:
+        - "authors"
+      summary: "Get author information by author id"
+      description: "Return one author information"
+      operationId: "getAuthorById"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "authorid"
+          in: "path"
+          description: "ID of author to return"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "200":
+          description: "success"
+          schema:
+            $ref: "#/definitions/author"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "authors"
+  /comments:
+    get:
+      tags:
+      - "comments"
+      summary: "Get all comments information"
+      description: "Return all comments information"
+      operationId: "getComments"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "success"
+          schema:
+            $ref: "#/definitions/comment"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "comments"
+    post:
+      tags:
+        - "comments"
+      summary: "Create new comment"
+      description: ""
+      operationId: "addNewComment"
+      produces:
+        - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "comment content to add"
+        require: true
+        schema:
+          $ref: "#/definitions/comment"
+      responses:
+        "200":
+          description: "successful operation"
+        "409":
+          description: "already existed comment"
+      x-swagger-router-controller: "comments"    
+  /comments/{bookid}:
+    get:
+      tags:
+      - "comments"
+      summary: "Get comments by book id"
+      description: "All comments for the book id"
+      operationId: "getCommentsByBook"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "bookid"
+        in: "path"
+        description: "ID of book to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "success"
+          schema:
+            $ref: "#/definitions/comment"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "comments"
+  /comments/{userid}&{commentid}:
+    put: 
+      tags:
+        - "comments"
+      summary: "update comment contents"
+      description: ""
+      operationId: "updateComment"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userid"
+        in: "path"
+        description: "ID of user to return"
+        required: true
+        type: "integer"
+      - name: "commentid"
+        in: "path"
+        description: "ID of comment to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "success"
+          schema:
+            $ref: "#/definitions/comment"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "comments"      
+    delete: 
+      tags:
+        - "comments"
+      summary: "delete comment contents"
+      description: ""
+      operationId: "deleteComment"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userid"
+        in: "path"
+        description: "ID of user to return"
+        required: true
+        type: "integer"
+      - name: "commentid"
+        in: "path"
+        description: "ID of comment to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "successfully deleted"
+          schema:
+            $ref: "#/definitions/success"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "comments"
+  /admin/books:
+    get: 
+      tags:
+        - "admin"
+      summary: "Get all books"
+      description: ""
+      operationId: "getAllBooks"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "success"
+          schema:
+            $ref: "#/definitions/book"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "admin"
+    post: 
+      tags:
+        - "admin"
+      summary: "Add new book information"
+      description: ""
+      operationId: "addNewBook"
+      produces:
+        - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "book content to add"
+        require: true
+        schema:
+          $ref: "#/definitions/book"
+      responses:
+        "200":
+          description: "successful operation"
+        "409":
+          description: "already existed book"
+      x-swagger-router-controller: "admin"                 
+  /admin/books/{bookid}:
+    put: 
+      tags:
+        - "admin"
+      summary: "update book contents"
+      description: ""
+      operationId: "updateBook"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "bookid"
+        in: "path"
+        description: "ID of book to return"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "success"
+          schema:
+            $ref: "#/definitions/book"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "admin"      
+    delete: 
+      tags:
+        - "admin"
+      summary: "delete book contents"
+      description: ""
+      operationId: "deleteBook"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "bookid"
+        in: "path"
+        description: "ID of book to return"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "successfully deleted"
+          schema:
+            $ref: "#/definitions/success"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "admin" 
+  /admin/authors:
+    get: 
+      tags:
+        - "admin"
+      summary: "Get all authors"
+      description: ""
+      operationId: "getAuthors"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "success"
+          schema:
+            $ref: "#/definitions/author"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "admin"
+    post: 
+      tags:
+        - "admin"
+      summary: "Add new author information"
+      description: ""
+      operationId: "addNewAuthor"
+      produces:
+        - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "author content to add"
+        require: true
+        schema:
+          $ref: "#/definitions/author"
+      responses:
+        "200":
+          description: "successful operation"
+        "409":
+          description: "already existed author"
+      x-swagger-router-controller: "admin"                 
+  /admin/authors/{authorid}:
+    put: 
+      tags:
+        - "admin"
+      summary: "update author information"
+      description: ""
+      operationId: "updateAuthor"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "authorid"
+        in: "path"
+        description: "ID of author to return"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "success"
+          schema:
+            $ref: "#/definitions/author"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "admin"      
+    delete: 
+      tags:
+        - "admin"
+      summary: "delete author"
+      description: ""
+      operationId: "deleteAuthor"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "bookid"
+        in: "path"
+        description: "ID of author to return"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "successfully deleted"
+          schema:
+            $ref: "#/definitions/success"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "admin" 
+  /admin/users/{userid}:
+    put: 
+      tags:
+        - "admin"
+      summary: "update user as admin account"
+      description: ""
+      operationId: "updateToAdmin"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userid"
+        in: "path"
+        description: "ID of user to return"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "success"
+          schema:
+            $ref: "#/definitions/user"
+        "404":
+          description: "not found data"
+        "500":
+          description: "operating error"
+      x-swagger-router-controller: "admin"     
 definitions:
-  books:
+  success:
     type: "object"
     properties:
       status:
@@ -54,7 +611,15 @@ definitions:
         description: "indicate the data status"
       data:
         type: "array"
-        $ref: "#/definitions/book"
+        description: "array of data objects"
+  error:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+      message:
+        type: "string"
+        description: "error message"
   book:
     type: "object"
     properties:
@@ -88,11 +653,80 @@ definitions:
       updatedAt:
         type: "string"
         format: "date-time"
-  error:
+  user:
     type: "object"
     properties:
-      status:
+      id:
+        type: "integer"
+        format: "int64"
+      useremail:
         type: "string"
-      message:
+      password:
         type: "string"
-        description: "error message"
+        description: "hashed password"
+      first_name:
+        type: "string"
+      last_name:
+        type: "string"
+      isadmin:
+        type: "boolean"
+      createdAt:
+        type: "string"
+        format: "date-time"
+      updatedAt:
+        type: "string"
+        format: "date-time"
+  loginUser:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      password:
+        type: "string"
+    required: 
+      - email
+      - password
+  author:
+    type: "object"
+    properties:
+      id: 
+        type: "integer"
+        format: "int64"
+      first_name:
+        type: "string"
+      last_name:
+        type: "string"
+      dob: 
+        type: "string"
+        format: "date-time"
+      country: 
+        type: "string"
+      createdAt:
+        type: "string"
+        format: "date-time"
+      updatedAt:
+        type: "string"
+        format: "date-time"
+  comment:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      bookid:
+        type: "integer"
+        format: "int64"
+      userid:
+        type: "integer"
+        format: "int64"
+      body:
+        type: "string"
+      createdAt:
+        type: "string"
+        format: "date-time"
+      updatedAt:
+        type: "string"
+        format: "date-time"
+
+
+
